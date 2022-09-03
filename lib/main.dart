@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:signup_page/login.dart';
-import 'package:signup_page/register.dart';
+import 'package:bolao_da_copa/screens/login.dart';
+import 'package:bolao_da_copa/screens/register.dart';
 
 void main() {
   runApp(
