@@ -86,10 +86,17 @@ class _MyLoginState extends State<MyLogin> {
                       child: IconButton(
                         color: Colors.white,
                         onPressed: () async {
+                          usernameController.text = 'maick@devseeder.com';
+                          passwordController.text = 'cosmos#1797';
+
                           EasyLoading.show(status: 'loading...');
                           bool isLoginValid = await logar(
                               usernameController.text, passwordController.text);
                           EasyLoading.dismiss();
+
+                          if (isLoginValid) {
+                            Navigator.pushNamed(context, 'home');
+                          }
                         },
                         icon: const Icon(Icons.arrow_forward),
                       ),
@@ -138,8 +145,7 @@ class _MyLoginState extends State<MyLogin> {
 
 Future<bool> logar(String username, String password) async {
   EasyLoading.instance.toastPosition = EasyLoadingToastPosition.bottom;
-  EasyLoading.instance.animationDuration = const Duration(milliseconds: 6000);
-  EasyLoading.instance.displayDuration = const Duration(milliseconds: 6000);
+  // EasyLoading.instance.animationDuration = const Duration(milliseconds: 6000);
 
   if (username.isEmpty) {
     await EasyLoading.showToast(
@@ -158,6 +164,5 @@ Future<bool> logar(String username, String password) async {
     EasyLoading.showError(loginRes.message);
     return false;
   }
-
   return true;
 }

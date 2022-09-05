@@ -1,3 +1,4 @@
+import 'package:bolao_da_copa/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:bolao_da_copa/screens/login.dart';
 import 'package:bolao_da_copa/screens/register.dart';
@@ -10,6 +11,7 @@ void main() {
       routes: {
         'login': (context) => const MyLogin(),
         'register': (context) => const MyRegister(),
+        'home': (context) => const HomeTabBar()
       },
       builder: EasyLoading.init()));
 }
