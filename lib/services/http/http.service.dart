@@ -19,7 +19,8 @@ class HttpService {
       "Accept": "application/json"
     });
 
-    return CustomResponse(res.statusCode, jsonDecode(res.body));
+    return CustomResponse(
+        res.statusCode, res.body.isNotEmpty ? (json.decode(res.body)) : {});
   }
 
   static String basicAuthHeader(String username, String password) {

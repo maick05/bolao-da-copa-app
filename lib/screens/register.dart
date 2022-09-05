@@ -1,4 +1,10 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+
+import '../model/custom-reponse.model.dart';
+import '../services/users/create-user.service.dart';
 
 class MyRegister extends StatefulWidget {
   const MyRegister({Key? key}) : super(key: key);
@@ -8,6 +14,10 @@ class MyRegister extends StatefulWidget {
 }
 
 class _MyRegisterState extends State<MyRegister> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -23,9 +33,9 @@ class _MyRegisterState extends State<MyRegister> {
         backgroundColor: Colors.transparent,
         body: Stack(children: [
           Container(
-            padding: const EdgeInsets.only(left: 35, top: 80),
+            padding: const EdgeInsets.only(left: 35, top: 20),
             child: const Text(
-              "Create\nAccount",
+              "Crie uma Conta",
               style: TextStyle(color: Colors.white, fontSize: 33),
             ),
           ),
@@ -37,6 +47,7 @@ class _MyRegisterState extends State<MyRegister> {
                   top: MediaQuery.of(context).size.height * 0.27),
               child: Column(children: [
                 TextField(
+                  controller: nameController,
                   decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -46,7 +57,7 @@ class _MyRegisterState extends State<MyRegister> {
                       borderRadius: BorderRadius.circular(10),
                       borderSide: const BorderSide(color: Colors.white),
                     ),
-                    hintText: 'Name',
+                    hintText: 'Nome',
                     hintStyle: const TextStyle(color: Colors.white),
                   ),
                 ),
@@ -54,6 +65,7 @@ class _MyRegisterState extends State<MyRegister> {
                   height: 30,
                 ),
                 TextField(
+                  controller: usernameController,
                   decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -63,7 +75,7 @@ class _MyRegisterState extends State<MyRegister> {
                       borderRadius: BorderRadius.circular(10),
                       borderSide: const BorderSide(color: Colors.white),
                     ),
-                    hintText: 'Email',
+                    hintText: 'Nome de Usuário/Email',
                     hintStyle: const TextStyle(color: Colors.white),
                   ),
                 ),
@@ -71,6 +83,7 @@ class _MyRegisterState extends State<MyRegister> {
                   height: 30,
                 ),
                 TextField(
+                  controller: passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
@@ -81,7 +94,7 @@ class _MyRegisterState extends State<MyRegister> {
                       borderRadius: BorderRadius.circular(10),
                       borderSide: const BorderSide(color: Colors.white),
                     ),
-                    hintText: 'Password',
+                    hintText: 'Senha',
                     hintStyle: const TextStyle(color: Colors.white),
                   ),
                 ),
@@ -92,7 +105,7 @@ class _MyRegisterState extends State<MyRegister> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'Sign In',
+                        'Registrar-se',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 27,
@@ -104,7 +117,14 @@ class _MyRegisterState extends State<MyRegister> {
                         backgroundColor: const Color(0xff4c505b),
                         child: IconButton(
                           color: Colors.white,
-                          onPressed: () {},
+                          onPressed: () async {
+                            EasyLoading.show(status: 'loading...');
+                            bool isCreated = await registrar(
+                                nameController.text,
+                                usernameController.text,
+                                passwordController.text);
+                            EasyLoading.dismiss();
+                          },
                           icon: const Icon(Icons.arrow_forward),
                         ),
                       ),
@@ -136,4 +156,38 @@ class _MyRegisterState extends State<MyRegister> {
       ),
     );
   }
+}
+
+Future<bool> registrar(String name, String username, String password) async {
+  EasyLoading.instance.toastPosition = EasyLoadingToastPosition.bottom;
+  EasyLoading.instance.animationDuration = const Duration(milliseconds: 6000);
+
+  if (name.isEmpty) {
+    await EasyLoading.showToast('Campo Nome devem ser preenchido!');
+    return false;
+  }
+
+  if (username.isEmpty) {
+    await EasyLoading.showToast(
+        'Campo Nome de Usuário/Email devem ser preenchido!');
+    return false;
+  }
+
+  if (password.isEmpty) {
+    await EasyLoading.showToast('Campo Senha devem ser preenchido!');
+    return false;
+  }
+
+  CustomMessageResponse res =
+      await CreateUserService.createUser(name, username, password);
+
+  print(res.success);
+  print(res.message);
+
+  if (!res.success) {
+    EasyLoading.showToast(res.message);
+    return false;
+  }
+
+  return true;
 }

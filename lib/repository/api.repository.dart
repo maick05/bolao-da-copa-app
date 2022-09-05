@@ -2,21 +2,10 @@ import 'package:bolao_da_copa/services/http/http.service.dart';
 
 import '../model/custom-reponse.model.dart';
 
-class AuthRepository {
-  HttpService httpService = HttpService("http://auth.devseeder.com");
+class ApiRepository {
+  HttpService httpService = HttpService("http://192.168.128.1:3010");
 
-  Future<CustomResponse> login(String username, String password) async {
-    try {
-      return httpService.makePost('/auth/login', ["BOLAO_DA_COPA/ALL/ADM"],
-          HttpService.basicAuthHeader(username, password));
-    } on Exception catch (e) {
-      return CustomResponse(500, e);
-    } on Error catch (e) {
-      return CustomResponse(500, e);
-    }
-  }
-
-  Future<CustomResponse> create(
+  Future<CustomResponse> createUser(
       String name, String username, String password) async {
     try {
       final Map<String, String> user = {

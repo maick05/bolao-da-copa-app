@@ -29,7 +29,7 @@ class _MyLoginState extends State<MyLogin> {
           Container(
             padding: const EdgeInsets.only(left: 35, top: 80),
             child: const Text(
-              "Welcome\nBack",
+              "Boão da Copa",
               style: TextStyle(color: Colors.white, fontSize: 33),
             ),
           ),
@@ -45,7 +45,7 @@ class _MyLoginState extends State<MyLogin> {
                   decoration: InputDecoration(
                     fillColor: Colors.grey.shade100,
                     filled: true,
-                    hintText: 'Email',
+                    hintText: 'Nome de Usuário ou Email',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -60,7 +60,7 @@ class _MyLoginState extends State<MyLogin> {
                   decoration: InputDecoration(
                     fillColor: Colors.grey.shade100,
                     filled: true,
-                    hintText: 'Password',
+                    hintText: 'Senha',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -73,7 +73,7 @@ class _MyLoginState extends State<MyLogin> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Sign In',
+                      'Logar',
                       style: TextStyle(
                         color: Color(0xff4c505b),
                         fontSize: 27,
@@ -107,7 +107,7 @@ class _MyLoginState extends State<MyLogin> {
                           Navigator.pushNamed(context, 'register');
                         },
                         child: const Text(
-                          'Sign Up',
+                          'Registrar-se',
                           style: TextStyle(
                             decoration: TextDecoration.underline,
                             fontSize: 18,
@@ -118,7 +118,7 @@ class _MyLoginState extends State<MyLogin> {
                       TextButton(
                         onPressed: () {},
                         child: const Text(
-                          'Forgot Password',
+                          'Esqueci minha senha',
                           style: TextStyle(
                             decoration: TextDecoration.underline,
                             fontSize: 18,
@@ -138,22 +138,24 @@ class _MyLoginState extends State<MyLogin> {
 
 Future<bool> logar(String username, String password) async {
   EasyLoading.instance.toastPosition = EasyLoadingToastPosition.bottom;
+  EasyLoading.instance.animationDuration = const Duration(milliseconds: 6000);
+  EasyLoading.instance.displayDuration = const Duration(milliseconds: 6000);
 
   if (username.isEmpty) {
-    EasyLoading.showToast(
-        'Campo Nome de Usuário ou Email devem ser preenchido!');
+    await EasyLoading.showToast(
+        'Campo Nome de Usuário ou Email deve ser preenchido!');
     return false;
   }
 
   if (password.isEmpty) {
-    EasyLoading.showToast('Campo Senha devem ser preenchido!');
+    await EasyLoading.showToast('Campo Senha deve ser preenchido!');
     return false;
   }
 
   CustomMessageResponse loginRes = await LoginService.login(username, password);
 
   if (!loginRes.success) {
-    EasyLoading.showToast(loginRes.message);
+    EasyLoading.showError(loginRes.message);
     return false;
   }
 
