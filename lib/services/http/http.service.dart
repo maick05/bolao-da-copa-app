@@ -1,14 +1,13 @@
 // ignore_for_file: avoid_print
-
 import 'dart:convert';
 import 'package:http/http.dart';
+import '../../model/custom-reponse.model.dart';
 
 class HttpService {
   String url;
-
   HttpService(this.url);
 
-  Future<Object> makePost(String endpoint, data, String auth) async {
+  Future<CustomResponse> makePost(String endpoint, data, String auth) async {
     var uri = Uri.parse(url + endpoint);
     print('making post...' + uri.toString());
 
@@ -20,7 +19,7 @@ class HttpService {
       "Accept": "application/json"
     });
 
-    return {"status": res.statusCode, "data": jsonDecode(res.body)};
+    return CustomResponse(res.statusCode, jsonDecode(res.body));
   }
 
   static String basicAuthHeader(String username, String password) {
