@@ -3,8 +3,7 @@
 import 'package:bolao_da_copa/model/custom-reponse.model.dart';
 import 'package:bolao_da_copa/services/auth/login.service.dart';
 import 'package:flutter/material.dart';
-
-import '../components/custom-tooltip.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class MyLogin extends StatefulWidget {
   const MyLogin({Key? key}) : super(key: key);
@@ -16,16 +15,9 @@ class MyLogin extends StatefulWidget {
 class _MyLoginState extends State<MyLogin> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  final String _messageTooltip = "";
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<TooltipState> tooltipkeyEmail = GlobalKey<TooltipState>();
-    final GlobalKey<TooltipState> tooltipkeyPassword =
-        GlobalKey<TooltipState>();
-    final GlobalKey<TooltipState> tooltipkeyInvalido =
-        GlobalKey<TooltipState>();
-
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
@@ -34,15 +26,6 @@ class _MyLoginState extends State<MyLogin> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(children: [
-          CustomTooltip(
-              stateKey: tooltipkeyEmail,
-              message: "O campo Nome de Usuário ou Email deve ser preenchido!"),
-          CustomTooltip(
-              stateKey: tooltipkeyPassword,
-              message: "O campo Senha deve ser preenchido!"),
-          CustomTooltip(
-              stateKey: tooltipkeyInvalido,
-              message: "Usuário e/ou senha inválido(s)!"),
           Container(
             padding: const EdgeInsets.only(left: 35, top: 80),
             child: const Text(
@@ -103,13 +86,10 @@ class _MyLoginState extends State<MyLogin> {
                       child: IconButton(
                         color: Colors.white,
                         onPressed: () async {
+                          EasyLoading.show(status: 'loading...');
                           bool isLoginValid = await logar(
-                              usernameController.text,
-                              passwordController.text, [
-                            tooltipkeyEmail,
-                            tooltipkeyPassword,
-                            tooltipkeyInvalido
-                          ]);
+                              usernameController.text, passwordController.text);
+                          EasyLoading.dismiss();
                         },
                         icon: const Icon(Icons.arrow_forward),
                       ),
@@ -156,22 +136,24 @@ class _MyLoginState extends State<MyLogin> {
   }
 }
 
-Future<bool> logar(String username, String password,
-    List<GlobalKey<TooltipState>> tooltipKeys) async {
+Future<bool> logar(String username, String password) async {
+  EasyLoading.instance.toastPosition = EasyLoadingToastPosition.bottom;
+
   if (username.isEmpty) {
-    tooltipKeys[0].currentState?.ensureTooltipVisible();
+    EasyLoading.showToast(
+        'Campo Nome de Usuário ou Email devem ser preenchido!');
     return false;
   }
 
   if (password.isEmpty) {
-    tooltipKeys[1].currentState?.ensureTooltipVisible();
+    EasyLoading.showToast('Campo Senha devem ser preenchido!');
     return false;
   }
 
   CustomMessageResponse loginRes = await LoginService.login(username, password);
 
   if (!loginRes.success) {
-    tooltipKeys[2].currentState?.ensureTooltipVisible();
+    EasyLoading.showToast(loginRes.message);
     return false;
   }
 
