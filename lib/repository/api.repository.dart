@@ -1,3 +1,4 @@
+import 'package:bolao_da_copa/model/response/actual-match.model.dart';
 import 'package:bolao_da_copa/services/http/http.service.dart';
 
 import '../model/custom-reponse.model.dart';
@@ -18,6 +19,18 @@ class ApiRepository {
       return CustomResponse(500, e);
     } on Error catch (e) {
       return CustomResponse(500, e);
+    }
+  }
+
+  Future<CustomResponse<dynamic>> getActualRound(String idRound) async {
+    try {
+      return httpService.makeGet<ActualRound>(
+          "/rounds/actual/" + idRound + "/2022",
+          HttpService.bearerAuthHeader('apiToken'));
+    } on Exception catch (e) {
+      return CustomResponse(200, e);
+    } on Error catch (e) {
+      return CustomResponse(200, e);
     }
   }
 }

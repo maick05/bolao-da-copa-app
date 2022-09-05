@@ -2,6 +2,7 @@
 
 import 'package:bolao_da_copa/repository/auth.repository.dart';
 
+import '../../helper/local-storage.helper.dart';
 import '../../model/custom-reponse.model.dart';
 
 class LoginService {
@@ -16,6 +17,7 @@ class LoginService {
             false, "Usuário e/ou senha são inválido(s)");
       case 200:
       case 201:
+        await LocalStorageHelper.setValue('apiToken', response.data['token']);
         return CustomMessageResponse(true, "");
       default:
         return CustomMessageResponse(

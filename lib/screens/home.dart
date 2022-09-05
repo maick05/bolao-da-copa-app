@@ -1,3 +1,4 @@
+import 'package:bolao_da_copa/screens/rounds.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -24,7 +25,7 @@ class HomeTabBar extends StatelessWidget {
           ),
           body: const TabBarView(
             children: [
-              Icon(Icons.calendar_month),
+              Rounds(),
               Icon(Icons.group),
               Icon(Icons.star),
             ],

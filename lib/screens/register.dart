@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import '../model/custom-reponse.model.dart';
+import '../services/auth/login.service.dart';
 import '../services/users/create-user.service.dart';
 
 class MyRegister extends StatefulWidget {
@@ -124,6 +125,10 @@ class _MyRegisterState extends State<MyRegister> {
                                 usernameController.text,
                                 passwordController.text);
                             EasyLoading.dismiss();
+
+                            if (!isCreated) return;
+
+                            Navigator.pushNamed(context, 'home');
                           },
                           icon: const Icon(Icons.arrow_forward),
                         ),
@@ -181,10 +186,14 @@ Future<bool> registrar(String name, String username, String password) async {
   CustomMessageResponse res =
       await CreateUserService.createUser(name, username, password);
 
-  print(res.success);
-  print(res.message);
-
   if (!res.success) {
+    EasyLoading.showToast(res.message);
+    return false;
+  }
+
+  CustomMessageResponse loginRes = await LoginService.login(username, password);
+
+  if (!loginRes.success) {
     EasyLoading.showToast(res.message);
     return false;
   }

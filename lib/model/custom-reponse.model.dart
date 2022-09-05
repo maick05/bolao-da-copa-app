@@ -1,6 +1,6 @@
-class CustomResponse {
+class CustomResponse<DataResponse> {
   int status = 0;
-  dynamic data;
+  DataResponse data;
   CustomResponse(this.status, this.data);
 }
 
