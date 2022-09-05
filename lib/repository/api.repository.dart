@@ -1,10 +1,9 @@
-import 'package:bolao_da_copa/model/response/actual-match.model.dart';
 import 'package:bolao_da_copa/services/http/http.service.dart';
 
-import '../model/custom-reponse.model.dart';
+import '../model/response/custom-reponse.model.dart';
 
 class ApiRepository {
-  HttpService httpService = HttpService("http://192.168.128.1:3010");
+  HttpService httpService = HttpService("http://192.168.16.108:3010");
 
   Future<CustomResponse> createUser(
       String name, String username, String password) async {
@@ -22,11 +21,10 @@ class ApiRepository {
     }
   }
 
-  Future<CustomResponse<dynamic>> getActualRound(String idRound) async {
+  Future<CustomResponse> getActualRound() async {
     try {
-      return httpService.makeGet<ActualRound>(
-          "/rounds/actual/" + idRound + "/2022",
-          HttpService.bearerAuthHeader('apiToken'));
+      return httpService.makeGet("/rounds/actual/1/2022",
+          await HttpService.bearerAuthHeader('apiToken'));
     } on Exception catch (e) {
       return CustomResponse(200, e);
     } on Error catch (e) {

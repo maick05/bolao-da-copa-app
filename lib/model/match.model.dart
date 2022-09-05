@@ -1,4 +1,4 @@
-class Match {
+class RoundMatch {
   int idTeamHome = 0;
   int idTeamOutside = 0;
   String idGroup = "";
@@ -16,6 +16,24 @@ class Match {
   String teamOutside = "";
   String teamOutsideCode = "";
   String teamOutsideImg = "";
+
+  fromMap(Map<String, dynamic> mapObj) {
+    idTeamHome = mapObj['idTeamHome'];
+    idTeamOutside = mapObj['idTeamOutside'];
+    idGroup = mapObj['idGroup'];
+    scoreHome = mapObj['scoreHome'] ?? -1;
+    scoreOutside = mapObj['scoreOutside'] ?? -1;
+    goals = [];
+    bets = [];
+    // date = DateTime.parse(mapObj['date']);
+    teamHome = mapObj['teamHome'];
+    teamHomeCode = mapObj['teamHomeCode'];
+    teamHomeImg = mapObj['teamHomeImg'];
+    teamOutside = mapObj['teamOutside'];
+    teamOutsideCode = mapObj['teamOutsideCode'];
+    teamOutsideImg = mapObj['teamOutsideImg'];
+    return this;
+  }
 }
 
 class Bet {

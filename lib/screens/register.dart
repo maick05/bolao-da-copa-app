@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-import '../model/custom-reponse.model.dart';
+import '../model/response/custom-reponse.model.dart';
 import '../services/auth/login.service.dart';
 import '../services/users/create-user.service.dart';
 

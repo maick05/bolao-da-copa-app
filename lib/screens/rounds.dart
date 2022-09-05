@@ -1,70 +1,72 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: avoid_print, must_be_immutable
 
-class Rounds extends StatelessWidget {
-  const Rounds({Key? key}) : super(key: key);
+import 'package:bolao_da_copa/model/match.model.dart';
+import 'package:bolao_da_copa/model/response/actual-round.model.dart';
+import 'package:bolao_da_copa/services/rounds/get-rounds.service.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:after_layout/after_layout.dart';
+
+class Rounds extends StatefulWidget {
+  Rounds({Key? key}) : super(key: key);
+
+  List<RoundMatch> _itens = [];
+
+  @override
+  _RoundsState createState() => _RoundsState();
+}
+
+class _RoundsState extends State<Rounds> with AfterLayoutMixin<Rounds> {
+  @override
+  void afterFirstLayout(BuildContext context) async {
+    var rounds = await loadRounds();
+    setState(() {
+      widget._itens = rounds;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final List<ListItem> items = [];
-
     return MaterialApp(
       home: Scaffold(
         body: ListView.builder(
-          // Let the ListView know how many items it needs to build.
-          itemCount: items.length,
-          // Provide a builder function. This is where the magic happens.
-          // Convert each item into a widget based on the type of item it is.
-          itemBuilder: (context, index) {
-            final item = items[index];
-
-            return ListTile(
-              title: item.buildTitle(context),
-              subtitle: item.buildSubtitle(context),
-            );
-          },
-        ),
+            itemCount: widget._itens.length,
+            itemBuilder: (context, indice) {
+              final match = widget._itens[indice];
+              return ItemMatch(match);
+            }),
       ),
     );
   }
 }
 
-/// The base class for the different types of items the list can contain.
-abstract class ListItem {
-  /// The title line to show in a list item.
-  Widget buildTitle(BuildContext context);
+Future<List<RoundMatch>> loadRounds() async {
+  EasyLoading.show(status: 'Carregando...');
+  var response = await GetRoundsService.getActualRound();
+  EasyLoading.dismiss();
 
-  /// The subtitle line, if any, to show in a list item.
-  Widget buildSubtitle(BuildContext context);
-}
-
-/// A ListItem that contains data to display a heading.
-class HeadingItem implements ListItem {
-  final String heading;
-
-  HeadingItem(this.heading);
-
-  @override
-  Widget buildTitle(BuildContext context) {
-    return Text(
-      heading,
-      style: Theme.of(context).textTheme.headline5,
-    );
+  if (!response.success) {
+    EasyLoading.showError(response.message);
+    return [];
   }
 
-  @override
-  Widget buildSubtitle(BuildContext context) => const SizedBox.shrink();
+  ActualRound data = response.message;
+  return data.matchesPlayed;
 }
 
-/// A ListItem that contains data to display a message.
-class MessageItem implements ListItem {
-  final String sender;
-  final String body;
+class ItemMatch extends StatelessWidget {
+  final RoundMatch _match;
 
-  MessageItem(this.sender, this.body);
+  const ItemMatch(this._match, {Key? key}) : super(key: key);
 
   @override
-  Widget buildTitle(BuildContext context) => Text(sender);
-
-  @override
-  Widget buildSubtitle(BuildContext context) => Text(body);
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        leading: const Icon(Icons.monetization_on),
+        title: Text(_match.teamHomeCode + " X " + _match.teamOutsideCode),
+        subtitle: Text("Group " + _match.idGroup),
+      ),
+    );
+  }
 }

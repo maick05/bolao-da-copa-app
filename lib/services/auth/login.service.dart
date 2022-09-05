@@ -3,7 +3,7 @@
 import 'package:bolao_da_copa/repository/auth.repository.dart';
 
 import '../../helper/local-storage.helper.dart';
-import '../../model/custom-reponse.model.dart';
+import '../../model/response/custom-reponse.model.dart';
 
 class LoginService {
   static Future<CustomMessageResponse> login(

@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_print
 
-import 'package:bolao_da_copa/model/custom-reponse.model.dart';
+import 'package:bolao_da_copa/model/response/custom-reponse.model.dart';
 import 'package:bolao_da_copa/services/auth/login.service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';

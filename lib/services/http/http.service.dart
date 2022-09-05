@@ -2,7 +2,7 @@
 import 'dart:convert';
 import 'package:bolao_da_copa/helper/local-storage.helper.dart';
 import 'package:http/http.dart';
-import '../../model/custom-reponse.model.dart';
+import '../../model/response/custom-reponse.model.dart';
 
 class HttpService {
   String url;
@@ -29,9 +29,8 @@ class HttpService {
     var uri = Uri.parse(url + endpoint);
     print('making get...' + uri.toString());
 
-    Response res = await post(uri, headers: <String, String>{
-      "authorization": auth,
-      "projectkey": "BOLAO_DA_COPA",
+    Response res = await get(uri, headers: <String, String>{
+      "Authorization": auth,
       "Content-Type": "application/json",
       "Accept": "application/json"
     });
@@ -44,7 +43,8 @@ class HttpService {
     return 'Basic ' + base64.encode(utf8.encode('$username:$password'));
   }
 
-  static String bearerAuthHeader(String tokenKey) {
-    return 'Bearer ' + LocalStorageHelper.getValue(tokenKey);
+  static Future<String> bearerAuthHeader(String tokenKey) async {
+    String token = await LocalStorageHelper.getValue(tokenKey);
+    return 'Bearer ' + token;
   }
 }

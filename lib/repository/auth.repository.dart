@@ -1,6 +1,6 @@
 import 'package:bolao_da_copa/services/http/http.service.dart';
 
-import '../model/custom-reponse.model.dart';
+import '../model/response/custom-reponse.model.dart';
 
 class AuthRepository {
   HttpService httpService = HttpService("http://auth.devseeder.com");

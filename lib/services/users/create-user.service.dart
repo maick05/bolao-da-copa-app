@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_print
 
-import '../../model/custom-reponse.model.dart';
+import '../../model/response/custom-reponse.model.dart';
 import '../../repository/api.repository.dart';
 
 class CreateUserService {

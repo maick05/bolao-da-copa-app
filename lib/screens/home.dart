@@ -21,13 +21,13 @@ class HomeTabBar extends StatelessWidget {
                 Tab(icon: Icon(Icons.star)),
               ],
             ),
-            title: const Text('Tabs Demo'),
+            title: const Text('Bolão da Copa'),
           ),
-          body: const TabBarView(
+          body: TabBarView(
             children: [
               Rounds(),
-              Icon(Icons.group),
-              Icon(Icons.star),
+              const Icon(Icons.group),
+              const Icon(Icons.star),
             ],
           ),
         ),

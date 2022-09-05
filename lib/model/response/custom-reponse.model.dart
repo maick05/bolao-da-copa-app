@@ -4,8 +4,12 @@ class CustomResponse<DataResponse> {
   CustomResponse(this.status, this.data);
 }
 
-class CustomMessageResponse {
+class CustomMessageResponse<DataResponse> {
   bool success = false;
-  dynamic message = "";
+  DataResponse message;
   CustomMessageResponse(this.success, this.message);
+}
+
+abstract class CustomModelResponse {
+  fromMap(Map<String, dynamic> mapObj);
 }
