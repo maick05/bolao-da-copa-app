@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print, must_be_immutable
 
+import 'package:bolao_da_copa/helper/date.helper.dart';
 import 'package:bolao_da_copa/model/match.model.dart';
 import 'package:bolao_da_copa/model/response/actual-round.model.dart';
 import 'package:bolao_da_copa/services/rounds/get-rounds.service.dart';
@@ -51,7 +52,7 @@ Future<List<RoundMatch>> loadRounds() async {
   }
 
   ActualRound data = response.message;
-  return data.matchesPlayed;
+  return data.nextMatches;
 }
 
 class ItemMatch extends StatelessWidget {
@@ -63,9 +64,33 @@ class ItemMatch extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        leading: const Icon(Icons.monetization_on),
-        title: Text(_match.teamHomeCode + " X " + _match.teamOutsideCode),
-        subtitle: Text("Group " + _match.idGroup),
+        title: Center(
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Image(
+                image: NetworkImage(_match.teamHomeImg),
+                width: 75,
+                height: 75,
+                fit: BoxFit.fill),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text(
+              _match.teamHomeCode + " X " + _match.teamOutsideCode,
+              style: const TextStyle(fontSize: 22),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Image(
+                image: NetworkImage(_match.teamOutsideImg),
+                width: 75,
+                height: 75,
+                fit: BoxFit.fill),
+          ),
+        ])),
+        subtitle: Text(DateHelper.formatDateTime(_match.date)),
       ),
     );
   }

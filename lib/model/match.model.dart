@@ -25,7 +25,7 @@ class RoundMatch {
     scoreOutside = mapObj['scoreOutside'] ?? -1;
     goals = [];
     bets = [];
-    // date = DateTime.parse(mapObj['date']);
+    date = DateTime.parse(mapObj['date']);
     teamHome = mapObj['teamHome'];
     teamHomeCode = mapObj['teamHomeCode'];
     teamHomeImg = mapObj['teamHomeImg'];

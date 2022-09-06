@@ -10,11 +10,16 @@ class HomeTabBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+        color: Color(0xFF8D1B3D),
+      )),
       home: DefaultTabController(
         length: 3,
         child: Scaffold(
           appBar: AppBar(
             bottom: const TabBar(
+              indicatorColor: Color(0xFF8D1B3D),
               tabs: [
                 Tab(icon: Icon(Icons.calendar_month)),
                 Tab(icon: Icon(Icons.group)),
