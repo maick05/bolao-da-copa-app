@@ -40,6 +40,7 @@ dependencies:
   flutter_svg: ^1.1.4
   intl: ^0.17.0
   date_format: ^2.0.6
+  toggle_switch: ^2.0.1
 
 dev_dependencies:
   flutter_test:
