@@ -11,6 +11,26 @@ class GetRoundsService extends AbstractService {
     CustomResponse response = await apiRepo.getActualRound();
 
     return AbstractService.validateGetResponse(
-        response, "buscar rounds", ActualRound());
+        response, "buscar rounds", ActualRound(),
+        list: false);
+  }
+
+  static Future<CustomMessageResponse> getRounds() async {
+    var apiRepo = ApiRepository();
+
+    CustomResponse response = await apiRepo.getRounds();
+
+    return AbstractService.validateGetResponse<RoundCompetition>(
+        response, "buscar rounds", RoundCompetition());
+  }
+
+  static Future<CustomMessageResponse> getMatchesByRound(int idRound) async {
+    var apiRepo = ApiRepository();
+
+    CustomResponse response = await apiRepo.getMatchesByRound(idRound);
+
+    return AbstractService.validateGetResponse<RoundCompetition>(
+        response, "buscar rounds", ActualRound(),
+        list: false);
   }
 }

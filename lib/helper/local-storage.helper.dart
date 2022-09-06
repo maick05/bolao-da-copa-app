@@ -17,6 +17,15 @@ class LocalStorageHelper {
     return prefs.getString(key);
   }
 
+  static getValueIfNotExists(key, callback) async {
+    var value = await LocalStorageHelper.getValue(key);
+    if (!value) {
+      value = await callback();
+    }
+    await LocalStorageHelper.setValue(key, value);
+    return LocalStorageHelper.getValue(key);
+  }
+
   static remove(key) async {
     SharedPreferences prefs = await getPrefs();
     prefs.remove(key);

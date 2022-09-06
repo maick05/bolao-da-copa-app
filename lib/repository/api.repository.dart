@@ -31,4 +31,26 @@ class ApiRepository {
       return CustomResponse(200, e);
     }
   }
+
+  Future<CustomResponse> getRounds() async {
+    try {
+      return httpService.makeGet("/rounds/competition/1/2022",
+          await HttpService.bearerAuthHeader('apiToken'));
+    } on Exception catch (e) {
+      return CustomResponse(200, e);
+    } on Error catch (e) {
+      return CustomResponse(200, e);
+    }
+  }
+
+  Future<CustomResponse> getMatchesByRound(int idRound) async {
+    try {
+      return httpService.makeGet("/rounds/matches/$idRound/1/2022",
+          await HttpService.bearerAuthHeader('apiToken'));
+    } on Exception catch (e) {
+      return CustomResponse(200, e);
+    } on Error catch (e) {
+      return CustomResponse(200, e);
+    }
+  }
 }
