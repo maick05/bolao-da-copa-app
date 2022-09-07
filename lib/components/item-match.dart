@@ -220,10 +220,12 @@ getImgTeam(String img, {double size = 65}) {
 }
 
 getBetScore(RoundMatch match, Bet bet) {
-  return Text(
-    getTextBetScore(match, bet),
-    style: const TextStyle(fontSize: 15),
-  );
+  return [
+    Text(
+      getTextBetScore(match, bet),
+      style: const TextStyle(fontSize: 15),
+    )
+  ];
 }
 
 getTextBetScore(RoundMatch match, Bet bet) {
