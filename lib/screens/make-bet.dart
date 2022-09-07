@@ -6,10 +6,9 @@ import 'package:bolao_da_copa/model/match.model.dart';
 import 'package:bolao_da_copa/services/bets/get-bets.service.dart';
 import 'package:bolao_da_copa/services/leagues/get-leagues.service.dart';
 import 'package:flutter/material.dart';
-import 'package:collection/collection.dart';
-
 import '../components/item-match.dart';
 import '../components/list-bet.dart';
+import 'package:collection/collection.dart';
 
 class MakeBet extends StatefulWidget {
   final RoundMatch match;
@@ -25,7 +24,7 @@ class MakeBet extends StatefulWidget {
 class _MakeBet extends State<MakeBet> with AfterLayoutMixin<MakeBet> {
   List<Bet> _bets = [];
   List<Bet> _betsUser = [];
-  late League? _selectedLeague;
+  League? _selectedLeague;
   List<League> _leagues = [];
   int _userId = 0;
 
@@ -36,28 +35,41 @@ class _MakeBet extends State<MakeBet> with AfterLayoutMixin<MakeBet> {
 
   Future<void> loadPage() async {
     LoadingHelper.show();
-    List<Bet> betsMatch = await getBets(
-        widget.idRound, widget.match.idTeamHome, widget.match.idTeamOutside, 1);
 
     _userId = await LocalStorageHelper.getValue<int>("userId");
 
     List<League> leagues = await getLeagues(_userId);
 
     setState(() {
+      _leagues = leagues;
+      _selectedLeague = leagues.isNotEmpty ? leagues[0] : null;
+    });
+
+    if (leagues.isEmpty) {
+      return;
+    }
+
+    List<Bet> betsMatch = await getBets(widget.idRound, widget.match.idTeamHome,
+        widget.match.idTeamOutside, leagues[0].id);
+
+    setState(() {
       _bets = betsMatch.where((element) => element.idUser != _userId).toList();
       Bet? betFindUser =
           betsMatch.firstWhereOrNull((element) => element.idUser == _userId);
       _betsUser = betFindUser != null ? [betFindUser] : [];
-      _leagues = leagues;
-      _selectedLeague = leagues.isNotEmpty ? leagues[0] : null;
     });
 
     LoadingHelper.hide();
   }
 
   Future<void> setLeague(League league) async {
+    List<Bet> betsMatch = await getBets(widget.idRound, widget.match.idTeamHome,
+        widget.match.idTeamOutside, league.id);
     setState(() {
+      LoadingHelper.show();
       _selectedLeague = league;
+      _bets = betsMatch.where((element) => element.idUser != _userId).toList();
+      LoadingHelper.hide();
     });
   }
 
@@ -73,8 +85,15 @@ class _MakeBet extends State<MakeBet> with AfterLayoutMixin<MakeBet> {
                     onRefresh: () async => {await loadPage()},
                     child: SingleChildScrollView(
                       child: Column(
-                          children: getBetsRows(widget, _betsUser, _bets,
-                              _userId, _leagues, loadPage, setLeague)),
+                          children: getBetsRows(
+                              widget,
+                              _selectedLeague,
+                              _betsUser,
+                              _bets,
+                              _userId,
+                              _leagues,
+                              loadPage,
+                              setLeague)),
                     )))));
   }
 }
@@ -87,8 +106,8 @@ getItemMatch(widget) {
   );
 }
 
-getBetsRows(widget, List<Bet> betsUser, List<Bet> bets, int userId,
-    List<League> leagues, callbackDiialog, callbackSelector) {
+getBetsRows(widget, selectedLeague, List<Bet> betsUser, List<Bet> bets,
+    int userId, List<League> leagues, callbackDiialog, callbackSelector) {
   List<Widget> arrRow = [];
   arrRow.add(getItemMatch(widget));
   betsUser.isNotEmpty
@@ -96,9 +115,19 @@ getBetsRows(widget, List<Bet> betsUser, List<Bet> bets, int userId,
       : arrRow
           .add(getEmptyBet(widget, userId, widget.idRound, callbackDiialog));
 
-  if (widget.match.isAlreadyPlayed()) {
-    arrRow.add(buildListBet(
-        bets, widget.match, widget.idRound, leagues, callbackSelector));
+  if (widget.match.isAlreadyPlayed() && leagues.isNotEmpty) {
+    arrRow.add(buildListBet(selectedLeague, bets, widget.match, widget.idRound,
+        leagues, callbackSelector));
+  }
+
+  if (leagues.isEmpty) {
+    arrRow.add(const Padding(
+      padding: EdgeInsets.all(15.0),
+      child: Text(
+        "Você não está participando de nenhuma Liga!",
+        style: TextStyle(color: Color(0xFF696969)),
+      ),
+    ));
   }
 
   return arrRow;

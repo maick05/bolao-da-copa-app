@@ -5,9 +5,8 @@ import 'package:flutter/material.dart';
 import '../helper/loading.helper.dart';
 import '../model/league.model.dart';
 
-buildListBet(List<Bet> itens, RoundMatch match, int idRound,
+buildListBet(selectedLeague, List<Bet> itens, RoundMatch match, int idRound,
     List<League> leagues, callbackSelector) {
-  League? selectedLeague = leagues.isNotEmpty ? leagues[0] : null;
   return Container(
       margin: const EdgeInsets.only(bottom: 30, left: 10, right: 10),
       child: Column(
@@ -40,7 +39,6 @@ buildListBet(List<Bet> itens, RoundMatch match, int idRound,
                       }
                       LoadingHelper.show();
                       callbackSelector(newVal);
-                      selectedLeague = newVal;
                       LoadingHelper.hide();
                     },
                     value: selectedLeague,
