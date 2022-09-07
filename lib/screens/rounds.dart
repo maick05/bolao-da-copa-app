@@ -1,6 +1,3 @@
-// ignore_for_file: avoid_print, must_be_immutable
-
-import 'package:bolao_da_copa/helper/date.helper.dart';
 import 'package:bolao_da_copa/model/match.model.dart';
 import 'package:bolao_da_copa/model/response/actual-round.model.dart';
 import 'package:bolao_da_copa/model/response/custom-reponse.model.dart';
@@ -9,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:toggle_switch/toggle_switch.dart';
+
+import '../components/item-match.dart';
 
 class Rounds extends StatefulWidget {
   Rounds({Key? key}) : super(key: key);
@@ -166,61 +165,6 @@ Future<ActualRound> loadRounds() async {
 
   ActualRound data = response.message;
   return data;
-}
-
-class ItemMatch extends StatelessWidget {
-  final RoundMatch _match;
-
-  const ItemMatch(this._match, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        title: Center(
-            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Image(
-                image: NetworkImage(_match.teamHomeImg),
-                width: 65,
-                height: 65,
-                fit: BoxFit.fill),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Text(
-              getTeamTextScore(_match),
-              style: const TextStyle(fontSize: 22),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Image(
-                image: NetworkImage(_match.teamOutsideImg),
-                width: 65,
-                height: 65,
-                fit: BoxFit.fill),
-          ),
-        ])),
-        subtitle: Text(DateHelper.formatDateTime(_match.date)),
-      ),
-    );
-  }
-}
-
-getTeamTextScore(RoundMatch match) {
-  if (match.scoreHome > -1 && match.scoreOutside > -1) {
-    return match.teamHomeCode +
-        " " +
-        match.scoreHome.toString() +
-        " X " +
-        match.scoreOutside.toString() +
-        " " +
-        match.teamOutsideCode;
-  } else {
-    return match.teamHomeCode + " X " + match.teamOutsideCode;
-  }
 }
 
 // getRounds() async {

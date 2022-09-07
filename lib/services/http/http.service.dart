@@ -1,4 +1,3 @@
-// ignore_for_file: avoid_print
 import 'dart:convert';
 import 'package:bolao_da_copa/helper/local-storage.helper.dart';
 import 'package:http/http.dart';
