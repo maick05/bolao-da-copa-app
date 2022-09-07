@@ -67,13 +67,14 @@ class Bet extends CustomModelResponse {
     obj.scoreOutside = scoreOutside;
     obj.dateTime = dateTime;
 
-    // List<dynamic> scores = List<dynamic>.from(mapObj['scoreBet']);
+    List<dynamic> scores = List<dynamic>.from(mapObj['scoreBet']);
 
-    // for (var element in scores) {
-    //   ScoreBet match = ScoreBet();
-    //   match.fromMap(element);
-    //   scores.add(match);
-    // }
+    for (var element in scores) {
+      ScoreBet score = ScoreBet();
+      score.fromMap(element);
+      obj.scoreBet.add(score);
+      scoreBet.add(score);
+    }
 
     return obj;
   }

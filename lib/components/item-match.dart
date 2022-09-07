@@ -150,11 +150,34 @@ class ItemBetMatch extends StatelessWidget {
 
 getSubtitle(
     Bet bet, context, RoundMatch match, int idRound, bool user, callback) {
-  if (match.isAlreadyPlayed()) return const Text("");
+  if (match.isAlreadyPlayed()) return getExatclyMatch(bet, match);
 
   if (user) return getSubtitleMyBet(bet, context, match, idRound, callback);
 
   return const Text("");
+}
+
+getExatclyMatch(Bet bet, RoundMatch match) {
+  if (bet.scoreHome == match.scoreHome &&
+      bet.scoreOutside == match.scoreOutside) {
+    return const Text.rich(
+      TextSpan(
+        children: [
+          WidgetSpan(child: Icon(Icons.check_circle)),
+        ],
+      ),
+    );
+  }
+
+  return const Text.rich(
+    TextSpan(
+      children: [
+        WidgetSpan(
+          child: Icon(Icons.cancel_rounded, color: Color(0xFFF44446)),
+        )
+      ],
+    ),
+  );
 }
 
 getSubtitleMyBet(Bet bet, context, RoundMatch match, int idRound, callback) {
