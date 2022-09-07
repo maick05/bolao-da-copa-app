@@ -4,6 +4,7 @@ import 'package:bolao_da_copa/repository/auth.repository.dart';
 
 import '../../helper/local-storage.helper.dart';
 import '../../model/response/custom-reponse.model.dart';
+import '../users/get-user.service.dart';
 
 class LoginService {
   static Future<CustomMessageResponse> login(
@@ -17,7 +18,13 @@ class LoginService {
             false, "Usuário e/ou senha são inválido(s)");
       case 200:
       case 201:
-        await LocalStorageHelper.setValue('apiToken', response.data['token']);
+        CustomMessageResponse resUser =
+            await GetUserService.getUserByUsername(username);
+
+        if (!resUser.success) return resUser;
+
+        await LocalStorageHelper.setValue<String>(
+            'apiToken', response.data['token']);
         return CustomMessageResponse(true, "");
       default:
         return CustomMessageResponse(

@@ -26,9 +26,9 @@ class ApiRepository {
       return httpService.makeGet("/rounds/actual/1/2022",
           await HttpService.bearerAuthHeader('apiToken'));
     } on Exception catch (e) {
-      return CustomResponse(200, e);
+      return CustomResponse(500, e);
     } on Error catch (e) {
-      return CustomResponse(200, e);
+      return CustomResponse(500, e);
     }
   }
 
@@ -37,9 +37,9 @@ class ApiRepository {
       return httpService.makeGet("/rounds/competition/1/2022",
           await HttpService.bearerAuthHeader('apiToken'));
     } on Exception catch (e) {
-      return CustomResponse(200, e);
+      return CustomResponse(500, e);
     } on Error catch (e) {
-      return CustomResponse(200, e);
+      return CustomResponse(500, e);
     }
   }
 
@@ -48,9 +48,20 @@ class ApiRepository {
       return httpService.makeGet("/rounds/matches/$idRound/1/2022",
           await HttpService.bearerAuthHeader('apiToken'));
     } on Exception catch (e) {
-      return CustomResponse(200, e);
+      return CustomResponse(500, e);
     } on Error catch (e) {
-      return CustomResponse(200, e);
+      return CustomResponse(500, e);
+    }
+  }
+
+  Future<CustomResponse> getUserByEmail(String email) async {
+    try {
+      return httpService.makeGet("/users/email/$email",
+          await HttpService.bearerAuthHeader('apiToken'));
+    } on Exception catch (e) {
+      return CustomResponse(500, e);
+    } on Error catch (e) {
+      return CustomResponse(500, e);
     }
   }
 }

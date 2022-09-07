@@ -26,7 +26,7 @@ abstract class AbstractService {
 
   static dynamic makeFromMap<ResponseListType>(
       dynamic dataMap, CustomModelResponse objectResp, bool list) {
-    if (dataMap.isEmpty) return list ? [] : null;
+    if (dataMap == null || dataMap.isEmpty) return list ? [] : null;
 
     if (!list) return objectResp.fromMap(dataMap);
 

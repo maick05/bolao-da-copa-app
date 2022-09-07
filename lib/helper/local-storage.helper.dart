@@ -7,14 +7,26 @@ getPrefs() {
 }
 
 class LocalStorageHelper {
-  static setValue(key, value) async {
+  static setValue<SetType>(key, value) async {
     SharedPreferences prefs = await getPrefs();
-    prefs.setString(key, value);
+    switch (SetType) {
+      case int:
+        prefs.setInt(key, value);
+        break;
+      default:
+        prefs.setString(key, value);
+        break;
+    }
   }
 
-  static getValue(key) async {
+  static getValue<GetType>(key) async {
     SharedPreferences prefs = await getPrefs();
-    return prefs.getString(key);
+    switch (GetType) {
+      case int:
+        return prefs.getInt(key);
+      default:
+        return prefs.getString(key);
+    }
   }
 
   static getValueIfNotExists(key, callback) async {

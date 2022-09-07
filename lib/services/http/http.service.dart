@@ -44,7 +44,7 @@ class HttpService {
   }
 
   static Future<String> bearerAuthHeader(String tokenKey) async {
-    String token = await LocalStorageHelper.getValue(tokenKey);
+    String token = await LocalStorageHelper.getValue<String>(tokenKey);
     return 'Bearer ' + token;
   }
 }
