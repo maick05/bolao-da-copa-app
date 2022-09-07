@@ -33,29 +33,31 @@ class _RoundsState extends State<Rounds> with AfterLayoutMixin<Rounds> {
 
   @override
   void afterFirstLayout(BuildContext context) async {
-    List<RoundCompetition> rounds = await getDBRounds();
-    setState(() {
-      _rounds = rounds;
-    });
     await loadPage(true);
   }
 
-  Future<void> loadPage(bool first) async {
-    print("loading page...");
-    print(first);
+  Future<void> loadPage(bool first, {int selectedRound = 1}) async {
+    setState(() {
+      _rounds = [];
+    });
+
     ActualRound round =
         first ? await loadRounds() : await getMatchesRound(_selectedRound!.id);
-
-    setItens(round);
+    List<RoundCompetition> rounds = await getDBRounds();
 
     setState(() {
-      _selectedRound =
-          _rounds.firstWhere((element) => element.id == round.idRound);
+      if (rounds.length > _rounds.length) {
+        _rounds = rounds;
+      }
     });
+
+    await setItens(
+        round, rounds.firstWhere((element) => element.id == round.idRound));
   }
 
-  setItens(ActualRound round) {
+  setItens(ActualRound round, RoundCompetition selectedRound) {
     setState(() {
+      _selectedRound = selectedRound;
       widget._itens = [];
       widget._itensNext = round.nextMatches;
       widget._itensPlayed = round.matchesPlayed;
@@ -117,14 +119,12 @@ class _RoundsState extends State<Rounds> with AfterLayoutMixin<Rounds> {
                             if (newVal == null) {
                               return;
                             }
-
                             EasyLoading.show(status: "Carregando...");
                             ActualRound roundsById =
                                 await getMatchesRound(newVal.id);
-                            setState(() {
-                              _selectedRound = newVal;
-                              setItens(roundsById);
-                            });
+
+                            setItens(roundsById, newVal);
+
                             EasyLoading.dismiss();
                           },
                           value: _selectedRound,
@@ -234,6 +234,5 @@ getDBRounds() async {
 
 getMatchesRound(int id) async {
   CustomMessageResponse res = await GetRoundsService.getMatchesByRound(id);
-  print("$id --> id");
   return res.message;
 }
