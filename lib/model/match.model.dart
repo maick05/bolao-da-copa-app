@@ -19,6 +19,11 @@ class RoundMatch extends CustomModelResponse {
   String teamOutsideCode = "";
   String teamOutsideImg = "";
 
+  bool isAlreadyPlayed() {
+    return (scoreHome > -1 && scoreOutside > -1) ||
+        date.isBefore(DateTime.now());
+  }
+
   @override
   fromMap(Map<String, dynamic> mapObj) {
     idTeamHome = mapObj['idTeamHome'];

@@ -2,7 +2,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class ToastHelper {
   static Future<void> show(msg) async {
-    EasyLoading.showToast(msg);
+    EasyLoading.showInfo(msg);
   }
 
   static Future<void> showError(msg) async {

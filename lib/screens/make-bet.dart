@@ -55,9 +55,11 @@ class _MakeBet extends State<MakeBet> with AfterLayoutMixin<MakeBet> {
             child: Scaffold(
                 body: RefreshIndicator(
                     onRefresh: () async => {await loadPage()},
-                    child: Column(
-                        children: getBetsRows(
-                            widget, _betsUser, _bets, _userId, loadPage))))));
+                    child: SingleChildScrollView(
+                      child: Column(
+                          children: getBetsRows(
+                              widget, _betsUser, _bets, _userId, loadPage)),
+                    )))));
   }
 }
 

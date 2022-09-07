@@ -63,8 +63,7 @@ List<Widget> getSubtitleItem(
   late String textButton;
   late IconData icon;
 
-  if ((match.scoreHome > -1 && match.scoreOutside > -1) ||
-      match.date.isBefore(DateTime.now())) {
+  if (match.isAlreadyPlayed()) {
     textButton = "Ver Palpites";
     icon = Icons.arrow_back;
   } else {
@@ -142,25 +141,36 @@ class ItemBetMatch extends StatelessWidget {
               children: [
                 Directionality(
                     textDirection: TextDirection.rtl,
-                    child: TextButton.icon(
-                      onPressed: () => {
-                        _displayTextInputDialog(context, _match, _idRound,
-                            _bet.idUser, _callbackDialog)
-                      },
-                      icon: Icon(
-                        _bet.scoreHome > -1 ? Icons.edit : Icons.add,
-                        size: 15,
-                      ),
-                      label: Text(
-                        _bet.scoreHome > -1
-                            ? "Atualizar Palpite"
-                            : "Fazer Palpite",
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                    ))
+                    child: getSubtitle(_bet, context, _match, _idRound, _user,
+                        _callbackDialog))
               ],
             )));
   }
+}
+
+getSubtitle(
+    Bet bet, context, RoundMatch match, int idRound, bool user, callback) {
+  if (match.isAlreadyPlayed()) return const Text("");
+
+  if (user) return getSubtitleMyBet(bet, context, match, idRound, callback);
+
+  return const Text("");
+}
+
+getSubtitleMyBet(Bet bet, context, RoundMatch match, int idRound, callback) {
+  return TextButton.icon(
+    onPressed: () => {
+      _displayTextInputDialog(context, match, idRound, bet.idUser, callback)
+    },
+    icon: Icon(
+      bet.scoreHome > -1 ? Icons.edit : Icons.add,
+      size: 15,
+    ),
+    label: Text(
+      bet.scoreHome > -1 ? "Atualizar Palpite" : "Fazer Palpite",
+      style: const TextStyle(fontSize: 12),
+    ),
+  );
 }
 
 List<Widget> getChildrenRow(RoundMatch match, Bet bet, bool user) {
