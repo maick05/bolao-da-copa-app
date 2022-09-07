@@ -1,12 +1,14 @@
 // ignore_for_file: avoid_print
 
+import 'package:bolao_da_copa/repository/api/user-api.repository.dart';
+
 import '../../model/response/custom-reponse.model.dart';
-import '../../repository/api.repository.dart';
+
+final UserApiRepository apiRepo = UserApiRepository();
 
 class CreateUserService {
   static Future<CustomMessageResponse> createUser(
       String name, String username, String password) async {
-    var apiRepo = ApiRepository();
     CustomResponse response =
         await apiRepo.createUser(name, username, password);
 

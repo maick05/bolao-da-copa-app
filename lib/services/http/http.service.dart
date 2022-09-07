@@ -10,7 +10,6 @@ class HttpService {
   Future<CustomResponse> makePost(String endpoint, data, String auth) async {
     var uri = Uri.parse(url + endpoint);
     print('making post...' + uri.toString());
-
     Response res =
         await post(uri, body: json.encode(data), headers: <String, String>{
       "authorization": auth,

@@ -4,12 +4,13 @@ import 'package:bolao_da_copa/services/abstract.service.dart';
 
 import '../../helper/local-storage.helper.dart';
 import '../../model/response/custom-reponse.model.dart';
-import '../../repository/api.repository.dart';
+import '../../repository/api/user-api.repository.dart';
+
+final UserApiRepository apiRepo = UserApiRepository();
 
 class GetUserService extends AbstractService {
   static Future<CustomMessageResponse> getUserByUsername(
       String username) async {
-    var apiRepo = ApiRepository();
     CustomResponse response = await apiRepo.getUserByEmail(username);
 
     switch (response.status) {

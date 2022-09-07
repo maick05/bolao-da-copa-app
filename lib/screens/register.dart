@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
+import '../helper/loading.helper.dart';
+import '../helper/toast.helper.dart';
 import '../model/response/custom-reponse.model.dart';
 import '../services/auth/login.service.dart';
 import '../services/users/create-user.service.dart';
@@ -119,12 +121,12 @@ class _MyRegisterState extends State<MyRegister> {
                         child: IconButton(
                           color: Colors.white,
                           onPressed: () async {
-                            EasyLoading.show(status: 'loading...');
+                            LoadingHelper.show();
                             bool isCreated = await registrar(
                                 nameController.text,
                                 usernameController.text,
                                 passwordController.text);
-                            EasyLoading.dismiss();
+                            LoadingHelper.hide();
 
                             if (!isCreated) return;
 
@@ -168,18 +170,17 @@ Future<bool> registrar(String name, String username, String password) async {
   EasyLoading.instance.animationDuration = const Duration(milliseconds: 6000);
 
   if (name.isEmpty) {
-    await EasyLoading.showToast('Campo Nome devem ser preenchido!');
+    await ToastHelper.show('Campo Nome devem ser preenchido!');
     return false;
   }
 
   if (username.isEmpty) {
-    await EasyLoading.showToast(
-        'Campo Nome de Usuário/Email devem ser preenchido!');
+    await ToastHelper.show('Campo Nome de Usuário/Email devem ser preenchido!');
     return false;
   }
 
   if (password.isEmpty) {
-    await EasyLoading.showToast('Campo Senha devem ser preenchido!');
+    await ToastHelper.show('Campo Senha devem ser preenchido!');
     return false;
   }
 
@@ -187,14 +188,14 @@ Future<bool> registrar(String name, String username, String password) async {
       await CreateUserService.createUser(name, username, password);
 
   if (!res.success) {
-    EasyLoading.showToast(res.message);
+    ToastHelper.show(res.message);
     return false;
   }
 
   CustomMessageResponse loginRes = await LoginService.login(username, password);
 
   if (!loginRes.success) {
-    EasyLoading.showToast(res.message);
+    ToastHelper.show(res.message);
     return false;
   }
 

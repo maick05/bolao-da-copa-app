@@ -1,10 +1,13 @@
 // ignore_for_file: avoid_print
 
+import 'package:bolao_da_copa/helper/loading.helper.dart';
 import 'package:bolao_da_copa/model/response/custom-reponse.model.dart';
 import 'package:bolao_da_copa/screens/home.dart';
 import 'package:bolao_da_copa/services/auth/login.service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+
+import '../helper/toast.helper.dart';
 
 class MyLogin extends StatefulWidget {
   const MyLogin({Key? key}) : super(key: key);
@@ -21,7 +24,6 @@ class _MyLoginState extends State<MyLogin> {
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () async {
-          print("pop login");
           return Navigator.canPop(context);
         },
         child: Container(
@@ -96,11 +98,11 @@ class _MyLoginState extends State<MyLogin> {
                               usernameController.text = 'maick@devseeder.com';
                               passwordController.text = 'cosmos#1797';
 
-                              EasyLoading.show(status: 'loading...');
+                              LoadingHelper.show();
                               bool isLoginValid = await logar(
                                   usernameController.text,
                                   passwordController.text);
-                              EasyLoading.dismiss();
+                              LoadingHelper.hide();
 
                               if (isLoginValid) {
                                 Navigator.pushReplacement(
@@ -160,20 +162,20 @@ Future<bool> logar(String username, String password) async {
   // EasyLoading.instance.animationDuration = const Duration(milliseconds: 6000);
 
   if (username.isEmpty) {
-    await EasyLoading.showToast(
+    await ToastHelper.show(
         'Campo Nome de Usuário ou Email deve ser preenchido!');
     return false;
   }
 
   if (password.isEmpty) {
-    await EasyLoading.showToast('Campo Senha deve ser preenchido!');
+    await ToastHelper.show('Campo Senha deve ser preenchido!');
     return false;
   }
 
   CustomMessageResponse loginRes = await LoginService.login(username, password);
 
   if (!loginRes.success) {
-    EasyLoading.showError(loginRes.message);
+    ToastHelper.showError(loginRes.message);
     return false;
   }
   return true;

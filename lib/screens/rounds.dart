@@ -3,11 +3,18 @@ import 'package:bolao_da_copa/model/response/actual-round.model.dart';
 import 'package:bolao_da_copa/model/response/custom-reponse.model.dart';
 import 'package:bolao_da_copa/services/rounds/get-rounds.service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 import '../components/item-match.dart';
+import '../helper/loading.helper.dart';
+import '../helper/toast.helper.dart';
+
+RoundCompetition firstRound() {
+  var round = RoundCompetition();
+  round.id = -1;
+  return round;
+}
 
 class Rounds extends StatefulWidget {
   Rounds({Key? key}) : super(key: key);
@@ -23,7 +30,7 @@ class Rounds extends StatefulWidget {
 class _RoundsState extends State<Rounds> with AfterLayoutMixin<Rounds> {
   List<RoundCompetition> _rounds = [];
   dynamic selectedMatchType = 1;
-  RoundCompetition? _selectedRound;
+  RoundCompetition? _selectedRound = firstRound();
 
   @override
   void initState() {
@@ -118,29 +125,31 @@ class _RoundsState extends State<Rounds> with AfterLayoutMixin<Rounds> {
                             if (newVal == null) {
                               return;
                             }
-                            EasyLoading.show(status: "Carregando...");
+                            LoadingHelper.show();
                             ActualRound roundsById =
                                 await getMatchesRound(newVal.id);
 
                             setItens(roundsById, newVal);
 
-                            EasyLoading.dismiss();
+                            LoadingHelper.hide();
                           },
                           value: _selectedRound,
                         ))),
                   ]),
-                  Expanded(child: SizedBox(child: buildList(widget._itens)))
+                  Expanded(
+                      child: SizedBox(
+                          child: buildList(widget._itens, _selectedRound!.id)))
                 ]))));
   }
 }
 
-buildList(List<RoundMatch> itens) {
+buildList(List<RoundMatch> itens, idRound) {
   if (itens.isNotEmpty) {
     return ListView.builder(
         itemCount: itens.length,
         itemBuilder: (context, indice) {
           final match = itens[indice];
-          return ItemMatch(match);
+          return ItemMatch(match, idRound);
         });
   } else {
     return const Padding(
@@ -154,12 +163,12 @@ buildList(List<RoundMatch> itens) {
 }
 
 Future<ActualRound> loadRounds() async {
-  EasyLoading.show(status: 'Carregando...');
+  LoadingHelper.show();
   var response = await GetRoundsService.getActualRound();
-  EasyLoading.dismiss();
+  LoadingHelper.hide();
 
   if (!response.success) {
-    EasyLoading.showError(response.message);
+    ToastHelper.showError(response.message);
     return ActualRound();
   }
 
