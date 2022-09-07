@@ -19,7 +19,7 @@ class LocalStorageHelper {
 
   static getValueIfNotExists(key, callback) async {
     var value = await LocalStorageHelper.getValue(key);
-    if (!value) {
+    if (value != null) {
       value = await callback();
     }
     await LocalStorageHelper.setValue(key, value);

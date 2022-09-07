@@ -10,13 +10,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
-firstRound() {
-  RoundCompetition firstRound = RoundCompetition();
-  firstRound.id = -1;
-  firstRound.name = "1 R";
-  return firstRound;
-}
-
 class Rounds extends StatefulWidget {
   Rounds({Key? key}) : super(key: key);
 
@@ -40,95 +33,123 @@ class _RoundsState extends State<Rounds> with AfterLayoutMixin<Rounds> {
 
   @override
   void afterFirstLayout(BuildContext context) async {
-    ActualRound round = await loadRounds();
     List<RoundCompetition> rounds = await getDBRounds();
+    setState(() {
+      _rounds = rounds;
+    });
+    await loadPage(true);
+  }
+
+  Future<void> loadPage(bool first) async {
+    print("loading page...");
+    print(first);
+    ActualRound round =
+        first ? await loadRounds() : await getMatchesRound(_selectedRound!.id);
+
+    setItens(round);
 
     setState(() {
-      widget._itensPlayed = round.matchesPlayed;
-      widget._itensNext = round.nextMatches;
-      widget._itens = round.nextMatches;
-      _rounds = rounds;
       _selectedRound =
           _rounds.firstWhere((element) => element.id == round.idRound);
+    });
+  }
+
+  setItens(ActualRound round) {
+    setState(() {
+      widget._itens = [];
+      widget._itensNext = round.nextMatches;
+      widget._itensPlayed = round.matchesPlayed;
+      if (round.matchesPlayed.isNotEmpty) {
+        selectedMatchType = 0;
+        widget._itens = round.matchesPlayed;
+      }
+      if (round.nextMatches.isNotEmpty) {
+        selectedMatchType = 1;
+        widget._itens = round.nextMatches;
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-          body: Column(
-        children: [
-          Row(children: [
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: ToggleSwitch(
-                activeBgColor: const [Color(0xFF8D1B3D)],
-                minWidth: 100,
-                initialLabelIndex: selectedMatchType,
-                totalSwitches: 2,
-                labels: const ["Já Jogadas", "Próximas"],
-                onToggle: (index) {
-                  setState(() {
-                    selectedMatchType = index;
-                  });
+        home: Scaffold(
+            body: RefreshIndicator(
+                onRefresh: () async => {loadPage(false)},
+                child: Column(children: [
+                  Row(children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: ToggleSwitch(
+                        activeBgColor: const [Color(0xFF8D1B3D)],
+                        minWidth: 100,
+                        initialLabelIndex: selectedMatchType,
+                        totalSwitches: 2,
+                        labels: const ["Já Jogadas", "Próximas"],
+                        onToggle: (index) {
+                          setState(() {
+                            selectedMatchType = index;
+                          });
 
-                  if (index == 1) {
-                    setState(() {
-                      widget._itens = widget._itensNext;
-                    });
-                  } else {
-                    setState(() {
-                      widget._itens = widget._itensPlayed;
-                    });
-                  }
-                },
-              ),
-            ),
-            Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Center(
-                    child: DropdownButton<RoundCompetition>(
-                  items: _rounds.map((item) {
-                    return DropdownMenuItem<RoundCompetition>(
-                      child: Text(item.name),
-                      value: item,
-                    );
-                  }).toList(),
-                  onChanged: (newVal) async {
-                    if (newVal == null) {
-                      return;
-                    }
+                          if (index == 1) {
+                            setState(() {
+                              widget._itens = widget._itensNext;
+                            });
+                          } else {
+                            setState(() {
+                              widget._itens = widget._itensPlayed;
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Center(
+                            child: DropdownButton<RoundCompetition>(
+                          items: _rounds.map((item) {
+                            return DropdownMenuItem<RoundCompetition>(
+                              child: Text(item.name),
+                              value: item,
+                            );
+                          }).toList(),
+                          onChanged: (newVal) async {
+                            if (newVal == null) {
+                              return;
+                            }
 
-                    EasyLoading.show(status: "Carregando...");
-                    ActualRound roundsById = await getMatchesRound(newVal.id);
-                    setState(() {
-                      _selectedRound = newVal;
-                      widget._itensNext = roundsById.nextMatches;
-                      widget._itensPlayed = roundsById.matchesPlayed;
-                      if (roundsById.matchesPlayed.isNotEmpty) {
-                        widget._itens = roundsById.matchesPlayed;
-                      }
-                      if (roundsById.nextMatches.isNotEmpty) {
-                        widget._itens = roundsById.nextMatches;
-                      }
-                    });
-                    EasyLoading.dismiss();
-                  },
-                  value: _selectedRound,
-                ))),
-          ]),
-          Expanded(
-              child: SizedBox(
-            child: ListView.builder(
-                itemCount: widget._itens.length,
-                itemBuilder: (context, indice) {
-                  final match = widget._itens[indice];
-                  return ItemMatch(match);
-                }),
-          ))
-        ],
-      )),
+                            EasyLoading.show(status: "Carregando...");
+                            ActualRound roundsById =
+                                await getMatchesRound(newVal.id);
+                            setState(() {
+                              _selectedRound = newVal;
+                              setItens(roundsById);
+                            });
+                            EasyLoading.dismiss();
+                          },
+                          value: _selectedRound,
+                        ))),
+                  ]),
+                  Expanded(child: SizedBox(child: buildList(widget._itens)))
+                ]))));
+  }
+}
+
+buildList(List<RoundMatch> itens) {
+  if (itens.isNotEmpty) {
+    return ListView.builder(
+        itemCount: itens.length,
+        itemBuilder: (context, indice) {
+          final match = itens[indice];
+          return ItemMatch(match);
+        });
+  } else {
+    return const Padding(
+      padding: EdgeInsets.all(15.0),
+      child: Text(
+        "Não Há partidas para serem mostradas!",
+        style: TextStyle(color: Color(0xFF696969)),
+      ),
     );
   }
 }
@@ -162,14 +183,14 @@ class ItemMatch extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             child: Image(
                 image: NetworkImage(_match.teamHomeImg),
-                width: 75,
-                height: 75,
+                width: 65,
+                height: 65,
                 fit: BoxFit.fill),
           ),
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: Text(
-              _match.teamHomeCode + " X " + _match.teamOutsideCode,
+              getTeamTextScore(_match),
               style: const TextStyle(fontSize: 22),
             ),
           ),
@@ -177,14 +198,28 @@ class ItemMatch extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             child: Image(
                 image: NetworkImage(_match.teamOutsideImg),
-                width: 75,
-                height: 75,
+                width: 65,
+                height: 65,
                 fit: BoxFit.fill),
           ),
         ])),
         subtitle: Text(DateHelper.formatDateTime(_match.date)),
       ),
     );
+  }
+}
+
+getTeamTextScore(RoundMatch match) {
+  if (match.scoreHome > -1 && match.scoreOutside > -1) {
+    return match.teamHomeCode +
+        " " +
+        match.scoreHome.toString() +
+        " X " +
+        match.scoreOutside.toString() +
+        " " +
+        match.teamOutsideCode;
+  } else {
+    return match.teamHomeCode + " X " + match.teamOutsideCode;
   }
 }
 
@@ -199,5 +234,6 @@ getDBRounds() async {
 
 getMatchesRound(int id) async {
   CustomMessageResponse res = await GetRoundsService.getMatchesByRound(id);
+  print("$id --> id");
   return res.message;
 }
