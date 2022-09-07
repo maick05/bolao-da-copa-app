@@ -204,9 +204,12 @@ getBetScore(RoundMatch match, Bet bet) {
 }
 
 getTextBetScore(RoundMatch match, Bet bet) {
+  String scoreHome = bet.scoreHome > -1 ? " " + bet.scoreHome.toString() : "";
+  String scoreOut =
+      bet.scoreOutside > -1 ? bet.scoreOutside.toString() + " " : "";
   return
       // match.teamHomeCode +
-      " " + bet.scoreHome.toString() + " X " + bet.scoreOutside.toString() + " "
+      scoreHome + " X " + scoreOut
       // + match.teamOutsideCode
       ;
 }

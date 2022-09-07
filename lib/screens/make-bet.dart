@@ -103,6 +103,5 @@ Future<List<Bet>> getBets(
     int idRound, int idTeamHome, int idTeamOutside, int idLeague) async {
   var res = await GetBetsService.getMatchesByRound(
       idRound, idTeamHome, idTeamOutside, idLeague);
-
-  return res.message;
+  return res.message.isNotEmpty ? res.message : [];
 }
