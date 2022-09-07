@@ -15,28 +15,32 @@ class HomeTabBar extends StatelessWidget {
         color: Color(0xFF8D1B3D),
       )),
       home: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          appBar: AppBar(
-            bottom: const TabBar(
-              indicatorColor: Color(0xFF8D1B3D),
-              tabs: [
-                Tab(icon: Icon(Icons.calendar_month)),
-                Tab(icon: Icon(Icons.group)),
-                Tab(icon: Icon(Icons.star)),
-              ],
+          length: 3,
+          child: WillPopScope(
+            onWillPop: () async {
+              return true;
+            },
+            child: Scaffold(
+              appBar: AppBar(
+                bottom: const TabBar(
+                  indicatorColor: Color(0xFF8D1B3D),
+                  tabs: [
+                    Tab(icon: Icon(Icons.calendar_month)),
+                    Tab(icon: Icon(Icons.group)),
+                    Tab(icon: Icon(Icons.star)),
+                  ],
+                ),
+                title: const Text('Bolão da Copa'),
+              ),
+              body: TabBarView(
+                children: [
+                  Rounds(),
+                  const Icon(Icons.group),
+                  const Icon(Icons.star),
+                ],
+              ),
             ),
-            title: const Text('Bolão da Copa'),
-          ),
-          body: TabBarView(
-            children: [
-              Rounds(),
-              const Icon(Icons.group),
-              const Icon(Icons.star),
-            ],
-          ),
-        ),
-      ),
+          )),
     );
   }
 }

@@ -1,11 +1,13 @@
+import 'package:bolao_da_copa/screens/make-bet.dart';
 import 'package:flutter/material.dart';
 import '../helper/date.helper.dart';
 import '../model/match.model.dart';
 
 class ItemMatch extends StatelessWidget {
   final RoundMatch _match;
+  late bool list;
 
-  const ItemMatch(this._match, {Key? key, bool list = true}) : super(key: key);
+  ItemMatch(this._match, {Key? key, this.list = true}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,7 @@ class ItemMatch extends StatelessWidget {
         ])),
         subtitle: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: getSubtitleItem(_match, context)),
+            children: getSubtitleItem(_match, context, list)),
       ),
     );
   }
@@ -59,24 +61,38 @@ getTeamTextScore(RoundMatch match) {
   }
 }
 
-List<Widget> getSubtitleItem(RoundMatch match, context) {
+List<Widget> getSubtitleItem(RoundMatch match, context, bool list) {
   List<Widget> arrRow = [];
   arrRow.add(Text(DateHelper.formatDateTime(match.date)));
 
+  late String textButton;
+  late IconData icon;
+
   if ((match.scoreHome > -1 && match.scoreOutside > -1) ||
       match.date.isBefore(DateTime.now())) {
-    return arrRow;
+    textButton = "Ver Palpites";
+    icon = Icons.arrow_back;
   } else {
-    arrRow.add(Directionality(
-      textDirection: TextDirection.rtl,
-      child: TextButton.icon(
-        onPressed: () => {
-          // a
-        },
-        icon: const Icon(Icons.arrow_back),
-        label: const Text("Palpitar"),
-      ),
-    ));
-    return arrRow;
+    textButton = "Palpitar";
+    icon = Icons.arrow_back;
   }
+
+  arrRow.add(Directionality(
+    textDirection: TextDirection.rtl,
+    child: TextButton.icon(
+      onPressed: () => {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MakeBet(
+                match: match,
+              ),
+            ))
+      },
+      icon: Icon(icon),
+      label: Text(textButton),
+    ),
+  ));
+
+  return arrRow;
 }
