@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'leagues/classification.dart';
 
 void main() {
-  runApp(HomeTabBar());
+  runApp(const HomeTabBar());
 }
 
 class HomeTabBar extends StatelessWidget {

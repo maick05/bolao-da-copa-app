@@ -1,7 +1,6 @@
 import 'package:badges/badges.dart';
 import 'package:bolao_da_copa/helper/local-storage.helper.dart';
 import 'package:bolao_da_copa/model/league.model.dart';
-import 'package:bolao_da_copa/model/match.model.dart';
 import 'package:bolao_da_copa/model/response/custom-reponse.model.dart';
 import 'package:bolao_da_copa/model/response/user-league-reponse.model.dart';
 import 'package:bolao_da_copa/services/classification/classification.service.dart';
@@ -17,11 +16,7 @@ import '../../helper/loading.helper.dart';
 // }
 
 class Classification extends StatefulWidget {
-  Classification({Key? key}) : super(key: key);
-
-  final List<RoundMatch> _itens = [];
-  final List<RoundMatch> _itensPlayed = [];
-  final List<RoundMatch> _itensNext = [];
+  const Classification({Key? key}) : super(key: key);
 
   @override
   _ClassificationState createState() => _ClassificationState();
@@ -48,10 +43,7 @@ class _ClassificationState extends State<Classification>
       }
       _users = [];
     });
-    print("_userId");
-    print(_userId);
-    print("selectedLeague");
-    print(selectedLeague);
+
     List<League> leagues = first ? await getLeagues(_userId) : _leagues;
     int idSelected = first ? leagues[0].id : selectedLeague;
     List<UserLeague> users =
@@ -63,8 +55,6 @@ class _ClassificationState extends State<Classification>
         _users = users;
         _selectedLeague =
             leagues.firstWhere((element) => element.id == idSelected);
-        print("firstWhere");
-        print(_selectedLeague);
       }
     });
     LoadingHelper.hide();

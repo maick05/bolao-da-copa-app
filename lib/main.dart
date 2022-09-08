@@ -11,7 +11,7 @@ void main() {
       routes: {
         'login': (context) => const MyLogin(),
         'register': (context) => const MyRegister(),
-        'home': (context) => HomeTabBar()
+        'home': (context) => const HomeTabBar()
       },
       builder: EasyLoading.init()));
 }
