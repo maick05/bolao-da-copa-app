@@ -43,10 +43,15 @@ class _ClassificationState extends State<Classification>
   Future<void> loadPage(bool first, {int selectedLeague = 1}) async {
     LoadingHelper.show();
     setState(() {
-      _leagues = [];
+      if (first) {
+        _leagues = [];
+      }
       _users = [];
     });
-
+    print("_userId");
+    print(_userId);
+    print("selectedLeague");
+    print(selectedLeague);
     List<League> leagues = first ? await getLeagues(_userId) : _leagues;
     int idSelected = first ? leagues[0].id : selectedLeague;
     List<UserLeague> users =
@@ -58,6 +63,8 @@ class _ClassificationState extends State<Classification>
         _users = users;
         _selectedLeague =
             leagues.firstWhere((element) => element.id == idSelected);
+        print("firstWhere");
+        print(_selectedLeague);
       }
     });
     LoadingHelper.hide();
@@ -93,7 +100,7 @@ class _ClassificationState extends State<Classification>
                         if (newVal == null) {
                           return;
                         }
-                        loadPage(false, selectedLeague: newVal.id);
+                        await loadPage(false, selectedLeague: newVal.id);
                       },
                       value: _selectedLeague,
                     ))),
@@ -111,10 +118,10 @@ buildList(List<UserLeague> users, List<League> leagues) {
         child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: DataTable(
-                columnSpacing: 35,
+                columnSpacing: 30,
                 columns: const <DataColumn>[
                   DataColumn(
-                    tooltip: "Nome",
+                    tooltip: "Posição",
                     label: Expanded(
                       child: Text(
                         '#',
@@ -127,16 +134,17 @@ buildList(List<UserLeague> users, List<League> leagues) {
                     label: Expanded(
                       child: Text(
                         'Nome',
-                        textAlign: TextAlign.center,
+                        textAlign: TextAlign.left,
                         style: TextStyle(fontStyle: FontStyle.italic),
                       ),
                     ),
                   ),
                   DataColumn(
+                    tooltip: "Pontuação",
                     label: Expanded(
                       child: Text(
-                        'Pontos',
-                        textAlign: TextAlign.center,
+                        'Pont.',
+                        textAlign: TextAlign.left,
                         style: TextStyle(fontStyle: FontStyle.italic),
                       ),
                     ),
@@ -145,8 +153,18 @@ buildList(List<UserLeague> users, List<League> leagues) {
                     tooltip: "Acerto de Placar",
                     label: Expanded(
                       child: Text(
-                        'Ac. Placar',
-                        textAlign: TextAlign.center,
+                        'Placar',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(fontStyle: FontStyle.italic),
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                    tooltip: "Acerto de Vencedor ou Empate",
+                    label: Expanded(
+                      child: Text(
+                        'Venc.',
+                        textAlign: TextAlign.left,
                         style: TextStyle(fontStyle: FontStyle.italic),
                       ),
                     ),
@@ -156,39 +174,51 @@ buildList(List<UserLeague> users, List<League> leagues) {
                     .asMap()
                     .entries
                     .map((entry) => DataRow(cells: [
-                          DataCell(Badge(
-                            badgeContent: Text(
-                              "#" + (entry.key + 1).toString(),
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                            badgeColor: getColorBadge(entry.key + 1),
-                          )),
-                          DataCell(
-                            Text(
-                              entry.value.user,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
-                                  color: Color.fromARGB(255, 75, 73, 73)),
-                            ),
-                          ),
-                          DataCell(Text(
-                            entry.value.points.toString(),
+                          DataCell(SizedBox(
+                              width: 30,
+                              child: Badge(
+                                badgeContent: Text(
+                                  "#" + (entry.key + 1).toString(),
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                                badgeColor: getColorBadge(entry.key + 1),
+                              ))),
+                          DataCell(SizedBox(
+                              child: Text(
+                            entry.value.user,
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 11,
-                                color: Colors.orange),
+                                fontSize: 15,
+                                color: Color.fromARGB(255, 75, 73, 73)),
+                          ))),
+                          DataCell(SizedBox(
+                            width: 22,
+                            child: Text(
+                              entry.value.points.toString(),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                  color: Colors.orange),
+                            ),
                           )),
                           DataCell(Text(
                             entry.value.exactlyMatch.toString(),
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 11,
-                                color: Colors.orange),
+                                fontSize: 12,
+                                color: Colors.blue),
+                          )),
+                          DataCell(Text(
+                            entry.value.winner.toString(),
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                                color: Colors.blue),
                           ))
                         ]))
                     .toList())));
