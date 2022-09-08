@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
-import '../components/item-match.dart';
-import '../helper/loading.helper.dart';
-import '../helper/toast.helper.dart';
+import '../../components/item-match.dart';
+import '../../helper/loading.helper.dart';
+import '../../helper/toast.helper.dart';
 
 RoundCompetition firstRound() {
   var round = RoundCompetition();
@@ -18,6 +18,12 @@ RoundCompetition firstRound() {
 
 class Rounds extends StatefulWidget {
   Rounds({Key? key}) : super(key: key);
+
+  final _RoundsState state = _RoundsState();
+
+  void refresh() {
+    state.loadPage(true);
+  }
 
   List<RoundMatch> _itens = [];
   List<RoundMatch> _itensPlayed = [];
@@ -31,6 +37,10 @@ class _RoundsState extends State<Rounds> with AfterLayoutMixin<Rounds> {
   List<RoundCompetition> _rounds = [];
   dynamic selectedMatchType = 1;
   RoundCompetition? _selectedRound = firstRound();
+
+  void refresh() {
+    setState(() {});
+  }
 
   @override
   void initState() {

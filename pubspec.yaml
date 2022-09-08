@@ -43,6 +43,7 @@ dependencies:
   toggle_switch: ^2.0.1
   fluttertoast: ^8.0.9
   toast: ^0.3.0
+  badges: ^2.0.3
 
 dev_dependencies:
   flutter_test:

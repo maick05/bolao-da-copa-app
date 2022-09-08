@@ -1,12 +1,15 @@
-import 'package:bolao_da_copa/screens/rounds.dart';
+import 'package:bolao_da_copa/screens/rounds/rounds.dart';
 import 'package:flutter/material.dart';
 
+import 'leagues/classification.dart';
+
 void main() {
-  runApp(const HomeTabBar());
+  runApp(HomeTabBar());
 }
 
 class HomeTabBar extends StatelessWidget {
   const HomeTabBar({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -35,7 +38,7 @@ class HomeTabBar extends StatelessWidget {
               body: TabBarView(
                 children: [
                   Rounds(),
-                  const Icon(Icons.group),
+                  Classification(),
                   const Icon(Icons.star),
                 ],
               ),

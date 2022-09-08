@@ -1,6 +1,6 @@
 import 'package:bolao_da_copa/helper/loading.helper.dart';
 import 'package:bolao_da_copa/helper/toast.helper.dart';
-import 'package:bolao_da_copa/screens/make-bet.dart';
+import 'package:bolao_da_copa/screens/rounds/make-bet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../helper/date.helper.dart';

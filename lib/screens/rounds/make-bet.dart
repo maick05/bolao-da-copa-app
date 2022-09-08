@@ -6,8 +6,8 @@ import 'package:bolao_da_copa/model/match.model.dart';
 import 'package:bolao_da_copa/services/bets/get-bets.service.dart';
 import 'package:bolao_da_copa/services/leagues/get-leagues.service.dart';
 import 'package:flutter/material.dart';
-import '../components/item-match.dart';
-import '../components/list-bet.dart';
+import '../../components/item-match.dart';
+import '../../components/list-bet.dart';
 import 'package:collection/collection.dart';
 
 class MakeBet extends StatefulWidget {
