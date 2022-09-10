@@ -13,7 +13,7 @@ Future<void> ShowUsersLeague(BuildContext context, League league,
       context: context,
       builder: (context) {
         return AlertDialog(
-          contentPadding: const EdgeInsets.only(left: 5, right: 5),
+          contentPadding: const EdgeInsets.all(5),
           clipBehavior: Clip.antiAliasWithSaveLayer,
           title: const Text('Participantes da Liga'),
           content: SingleChildScrollView(
@@ -49,7 +49,15 @@ Future<void> ShowUsersLeague(BuildContext context, League league,
                                           onPressed: () async {
                                             showAlertConfirmDialog(context,
                                                 () async {
-                                              await removeUser(league, user.id);
+                                              var res = await removeUser(
+                                                  league, user.id);
+                                              if (!res.success) return;
+
+                                              Navigator.pop(context, true);
+
+                                              await callbackDialog();
+                                              await ToastHelper.showSuccess(
+                                                  res.message);
                                             });
                                           },
                                           icon: const Icon(Icons.delete)),
@@ -71,15 +79,14 @@ Future<void> ShowUsersLeague(BuildContext context, League league,
       });
 }
 
-removeUser(League league, int idUser) async {
+Future<CustomMessageResponse> removeUser(League league, int idUser) async {
   LoadingHelper.show();
   CustomMessageResponse message =
       await UpdateLeaguesService.updateLeagueRemoveUser(league.id, idUser);
   LoadingHelper.hide();
 
-  message.success
-      ? ToastHelper.showSuccess(message.message)
-      : ToastHelper.showError(message.message);
+  if (!message.success) ToastHelper.showError(message.message);
+  return message;
 }
 
 showAlertConfirmDialog(BuildContext context, callback) {

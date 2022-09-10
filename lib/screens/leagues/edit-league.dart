@@ -63,150 +63,158 @@ class _EditLeagueState extends State<EditLeague>
         home: Scaffold(
             resizeToAvoidBottomInset: false,
             body: SingleChildScrollView(
-                child: Container(
-                    margin: const EdgeInsets.all(15),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
+                child: RefreshIndicator(
+                    onRefresh: () async {
+                      loadPage(widget.idLeague);
+                    },
+                    child: Container(
+                        margin: const EdgeInsets.all(15),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Expanded(
-                              child: TextFormField(
-                                controller: _nameCtrl,
-                                decoration: InputDecoration(
-                                    labelText: "Nome",
-                                    labelStyle:
-                                        TextStyle(color: Colors.grey[400])),
-                                readOnly: !_isUserAdm,
-                                enabled: _isUserAdm,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: const [
-                            Padding(
-                                padding: EdgeInsets.only(top: 17, bottom: 5),
-                                child: Text(
-                                  "Regras",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                )),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 60,
-                          child: TextFormField(
-                              controller: _exactlyMatchCtrl,
-                              decoration: InputDecoration(
-                                  labelText: "Placar Exato",
-                                  labelStyle:
-                                      TextStyle(color: Colors.grey[400])),
-                              readOnly: !_isUserAdm,
-                              enabled: _isUserAdm,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.digitsOnly
-                              ]),
-                        ),
-                        SizedBox(
-                          height: 60,
-                          child: TextFormField(
-                              controller: _winnerCtrl,
-                              decoration: InputDecoration(
-                                  labelText: "Vencedor ou Empate",
-                                  labelStyle:
-                                      TextStyle(color: Colors.grey[400])),
-                              readOnly: !_isUserAdm,
-                              enabled: _isUserAdm,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.digitsOnly
-                              ]),
-                        ),
-                        SizedBox(
-                          height: 60,
-                          child: TextFormField(
-                              controller: _oneScoreCtrl,
-                              decoration: InputDecoration(
-                                  labelText: "Nº de Gols de um Time",
-                                  labelStyle:
-                                      TextStyle(color: Colors.grey[400])),
-                              readOnly: !_isUserAdm,
-                              enabled: _isUserAdm,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.digitsOnly
-                              ]),
-                        ),
-                        SizedBox(
-                            height: 60,
-                            child: TextFormField(
-                              controller: _penaltWinnerCtrl,
-                              decoration: InputDecoration(
-                                  labelText: "Vencedor de Disputa de Pênaltis",
-                                  labelStyle:
-                                      TextStyle(color: Colors.grey[400])),
-                              readOnly: !_isUserAdm,
-                              enabled: _isUserAdm,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.digitsOnly
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: TextFormField(
+                                    controller: _nameCtrl,
+                                    decoration: InputDecoration(
+                                        labelText: "Nome",
+                                        labelStyle:
+                                            TextStyle(color: Colors.grey[400])),
+                                    readOnly: !_isUserAdm,
+                                    enabled: _isUserAdm,
+                                  ),
+                                ),
                               ],
-                            )),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                                padding: const EdgeInsets.all(3),
-                                child: ElevatedButton.icon(
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: ColorTheme),
-                                  onPressed: () async {
-                                    await ShowUsersLeague(context, _league,
-                                        _league.users, _userId, () {});
-                                  },
-                                  icon: const Icon(Icons.people),
-                                  label: const Text("Participantes"),
+                            ),
+                            Row(
+                              children: const [
+                                Padding(
+                                    padding:
+                                        EdgeInsets.only(top: 17, bottom: 5),
+                                    child: Text(
+                                      "Regras",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
+                                    )),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 60,
+                              child: TextFormField(
+                                  controller: _exactlyMatchCtrl,
+                                  decoration: InputDecoration(
+                                      labelText: "Placar Exato",
+                                      labelStyle:
+                                          TextStyle(color: Colors.grey[400])),
+                                  readOnly: !_isUserAdm,
+                                  enabled: _isUserAdm,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ]),
+                            ),
+                            SizedBox(
+                              height: 60,
+                              child: TextFormField(
+                                  controller: _winnerCtrl,
+                                  decoration: InputDecoration(
+                                      labelText: "Vencedor ou Empate",
+                                      labelStyle:
+                                          TextStyle(color: Colors.grey[400])),
+                                  readOnly: !_isUserAdm,
+                                  enabled: _isUserAdm,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ]),
+                            ),
+                            SizedBox(
+                              height: 60,
+                              child: TextFormField(
+                                  controller: _oneScoreCtrl,
+                                  decoration: InputDecoration(
+                                      labelText: "Nº de Gols de um Time",
+                                      labelStyle:
+                                          TextStyle(color: Colors.grey[400])),
+                                  readOnly: !_isUserAdm,
+                                  enabled: _isUserAdm,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ]),
+                            ),
+                            SizedBox(
+                                height: 60,
+                                child: TextFormField(
+                                  controller: _penaltWinnerCtrl,
+                                  decoration: InputDecoration(
+                                      labelText:
+                                          "Vencedor de Disputa de Pênaltis",
+                                      labelStyle:
+                                          TextStyle(color: Colors.grey[400])),
+                                  readOnly: !_isUserAdm,
+                                  enabled: _isUserAdm,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
                                 )),
-                            Padding(
-                                padding: const EdgeInsets.all(3),
-                                child: ElevatedButton.icon(
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: ColorTheme),
-                                  onPressed: () async {
-                                    await ShowUsersLeague(context, _league,
-                                        _league.users, _userId, () {});
-                                  },
-                                  icon: const Icon(Icons.person_add),
-                                  label: const Text("Add"),
-                                )),
-                            Padding(
-                                padding: const EdgeInsets.all(3),
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: ColorTheme),
-                                  onPressed: () async {
-                                    LoadingHelper.show();
-                                    CustomMessageResponse res =
-                                        await updateLeague(
-                                            _league.id,
-                                            _nameCtrl.text,
-                                            _exactlyMatchCtrl.text,
-                                            _winnerCtrl.text,
-                                            _oneScoreCtrl.text,
-                                            _penaltWinnerCtrl.text);
-                                    LoadingHelper.hide();
-                                    ToastHelper.showSuccess(res.message);
-                                  },
-                                  child: const Text("Salvar"),
-                                )),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                    padding: const EdgeInsets.all(3),
+                                    child: ElevatedButton.icon(
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: ColorTheme),
+                                      onPressed: () async {
+                                        await ShowUsersLeague(context, _league,
+                                            _league.users, _userId, () {
+                                          loadPage(_league.id);
+                                        });
+                                      },
+                                      icon: const Icon(Icons.people),
+                                      label: const Text("Participantes"),
+                                    )),
+                                Padding(
+                                    padding: const EdgeInsets.all(3),
+                                    child: ElevatedButton.icon(
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: ColorTheme),
+                                      onPressed: () async {
+                                        await ShowUsersLeague(context, _league,
+                                            _league.users, _userId, () {});
+                                      },
+                                      icon: const Icon(Icons.person_add),
+                                      label: const Text("Add"),
+                                    )),
+                                Padding(
+                                    padding: const EdgeInsets.all(3),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: ColorTheme),
+                                      onPressed: () async {
+                                        LoadingHelper.show();
+                                        CustomMessageResponse res =
+                                            await updateLeague(
+                                                _league.id,
+                                                _nameCtrl.text,
+                                                _exactlyMatchCtrl.text,
+                                                _winnerCtrl.text,
+                                                _oneScoreCtrl.text,
+                                                _penaltWinnerCtrl.text);
+                                        LoadingHelper.hide();
+                                        ToastHelper.showSuccess(res.message);
+                                      },
+                                      child: const Text("Salvar"),
+                                    )),
+                              ],
+                            )
                           ],
-                        )
-                      ],
-                    )))));
+                        ))))));
   }
 }
 
