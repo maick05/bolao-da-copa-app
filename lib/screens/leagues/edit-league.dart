@@ -210,27 +210,29 @@ class _EditLeagueState extends State<EditLeague>
                                           icon: const Icon(Icons.person),
                                           label: const Text("Participantes"),
                                         )),
-                                    Padding(
-                                        padding: const EdgeInsets.all(3),
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor: ColorTheme),
-                                          onPressed: () async {
-                                            LoadingHelper.show();
-                                            CustomMessageResponse res =
-                                                await updateLeague(
-                                                    _league.id,
-                                                    _nameCtrl.text,
-                                                    _exactlyMatchCtrl.text,
-                                                    _winnerCtrl.text,
-                                                    _oneScoreCtrl.text,
-                                                    _penaltWinnerCtrl.text);
-                                            LoadingHelper.hide();
-                                            ToastHelper.showSuccess(
-                                                res.message);
-                                          },
-                                          child: const Text("Salvar"),
-                                        )),
+                                    if (_isUserAdm)
+                                      Padding(
+                                          padding: const EdgeInsets.all(3),
+                                          child: ElevatedButton.icon(
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor: ColorTheme),
+                                            onPressed: () async {
+                                              LoadingHelper.show();
+                                              CustomMessageResponse res =
+                                                  await updateLeague(
+                                                      _league.id,
+                                                      _nameCtrl.text,
+                                                      _exactlyMatchCtrl.text,
+                                                      _winnerCtrl.text,
+                                                      _oneScoreCtrl.text,
+                                                      _penaltWinnerCtrl.text);
+                                              LoadingHelper.hide();
+                                              ToastHelper.showSuccess(
+                                                  res.message);
+                                            },
+                                            label: const Text("Salvar"),
+                                            icon: const Icon(Icons.save),
+                                          )),
                                   ],
                                 )
                               ],

@@ -33,57 +33,61 @@ Future<void> AddUsersLeague(
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Autocomplete<UserLeague>(
-                      key: _formKey,
-                      displayStringForOption: ((option) =>
-                          option.name + ", " + option.email),
-                      fieldViewBuilder:
-                          (context, controller, focusNode, onEditingComplete) {
-                        searchCtrl = controller;
-                        return TextField(
-                          controller: controller,
-                          focusNode: focusNode,
-                          onEditingComplete: onEditingComplete,
-                          decoration: const InputDecoration(
-                            hintStyle: TextStyle(color: Colors.grey),
-                            hintText: "Digite nome ou email...",
-                          ),
-                        );
-                      },
-                      optionsBuilder:
-                          (TextEditingValue textEditingValue) async {
-                        print("Typing..." + textEditingValue.text);
-                        if (textEditingValue.text == '' ||
-                            textEditingValue.text.length <= 2) {
-                          return const Iterable<UserLeague>.empty();
-                        }
-                        LoadingHelper.show();
-                        CustomMessageResponse res =
-                            await GetUserService.searchUser(
-                                textEditingValue.text);
-                        LoadingHelper.hide();
+                    if (league.idUserAdm == userId)
+                      Autocomplete<UserLeague>(
+                        key: _formKey,
+                        displayStringForOption: ((option) =>
+                            option.name + ", " + option.email),
+                        fieldViewBuilder: (context, controller, focusNode,
+                            onEditingComplete) {
+                          searchCtrl = controller;
+                          return TextField(
+                            controller: controller,
+                            focusNode: focusNode,
+                            onEditingComplete: onEditingComplete,
+                            decoration: const InputDecoration(
+                              hintStyle: TextStyle(color: Colors.grey),
+                              hintText: "Digite nome ou email...",
+                            ),
+                          );
+                        },
+                        optionsBuilder:
+                            (TextEditingValue textEditingValue) async {
+                          print("Typing..." + textEditingValue.text);
+                          if (textEditingValue.text == '' ||
+                              textEditingValue.text.length <= 2) {
+                            return const Iterable<UserLeague>.empty();
+                          }
+                          LoadingHelper.show();
+                          CustomMessageResponse res =
+                              await GetUserService.searchUser(
+                                  textEditingValue.text);
+                          LoadingHelper.hide();
 
-                        var results = res.message.where((UserLeague element) {
-                          List<int> usersMap = users.map((e) => e.id).toList();
-                          return !usersMap.contains(element.id) &&
-                              element.id != userId;
-                        });
+                          var results = res.message.where((UserLeague element) {
+                            List<int> usersMap =
+                                users.map((e) => e.id).toList();
+                            return !usersMap.contains(element.id) &&
+                                element.id != userId;
+                          });
 
-                        if (!res.success || res.message.isEmpty) {
-                          if (!res.success) ToastHelper.showError(res.message);
-                          return const Iterable<UserLeague>.empty();
-                        }
+                          if (!res.success || res.message.isEmpty) {
+                            if (!res.success) {
+                              ToastHelper.showError(res.message);
+                            }
+                            return const Iterable<UserLeague>.empty();
+                          }
 
-                        return results;
-                      },
-                      onSelected: (UserLeague selection) {
-                        searchCtrl.clear();
-                        // searchCtrl.text = "";
-                        setState(() {
-                          users.add(selection);
-                        });
-                      },
-                    ),
+                          return results;
+                        },
+                        onSelected: (UserLeague selection) {
+                          searchCtrl.clear();
+                          // searchCtrl.text = "";
+                          setState(() {
+                            users.add(selection);
+                          });
+                        },
+                      ),
                     Container(
                       margin: const EdgeInsets.all(5),
                       child: Column(
@@ -112,19 +116,39 @@ Future<void> AddUsersLeague(
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(user.email),
-                                            Wrap(
-                                                direction: Axis.horizontal,
-                                                alignment: WrapAlignment.end,
-                                                children: [
-                                                  IconButton(
-                                                      tooltip:
-                                                          "Remover Participante",
-                                                      onPressed: () async {
-                                                        showAlertConfirmDialog(
-                                                            context, () async {
-                                                          if (checkNewUser(
-                                                              league.users,
-                                                              user)) {
+                                            if (league.idUserAdm == userId)
+                                              Wrap(
+                                                  direction: Axis.horizontal,
+                                                  alignment: WrapAlignment.end,
+                                                  children: [
+                                                    IconButton(
+                                                        tooltip:
+                                                            "Remover Participante",
+                                                        onPressed: () async {
+                                                          showAlertConfirmDialog(
+                                                              context,
+                                                              () async {
+                                                            if (checkNewUser(
+                                                                league.users,
+                                                                user)) {
+                                                              setState(
+                                                                  () => {
+                                                                        users.removeWhere((element) =>
+                                                                            element.id ==
+                                                                            user.id)
+                                                                      });
+                                                              return;
+                                                            }
+
+                                                            CustomMessageResponse
+                                                                res =
+                                                                await callbackRemove(
+                                                                    league,
+                                                                    user.id);
+                                                            if (!res.success) {
+                                                              return;
+                                                            }
+
                                                             setState(() => {
                                                                   users.removeWhere(
                                                                       (element) =>
@@ -132,30 +156,11 @@ Future<void> AddUsersLeague(
                                                                               .id ==
                                                                           user.id)
                                                                 });
-                                                            return;
-                                                          }
-
-                                                          CustomMessageResponse
-                                                              res =
-                                                              await callbackRemove(
-                                                                  league,
-                                                                  user.id);
-                                                          if (!res.success) {
-                                                            return;
-                                                          }
-
-                                                          setState(() => {
-                                                                users.removeWhere(
-                                                                    (element) =>
-                                                                        element
-                                                                            .id ==
-                                                                        user.id)
-                                                              });
-                                                        });
-                                                      },
-                                                      icon: const Icon(
-                                                          Icons.delete)),
-                                                ])
+                                                          });
+                                                        },
+                                                        icon: const Icon(
+                                                            Icons.delete)),
+                                                  ])
                                           ],
                                         )));
                               }),
@@ -171,17 +176,18 @@ Future<void> AddUsersLeague(
                       Navigator.pop(context, true);
                     },
                   ),
-                  TextButton(
-                    child: const Text('CONFIRMAR'),
-                    onPressed: () async {
-                      List<UserLeague> usersFilter = users
-                          .where(
-                              (element) => !league.userIds.contains(element.id))
-                          .toList();
-                      await callbackDialogAdd(league, usersFilter);
-                      Navigator.pop(context, true);
-                    },
-                  ),
+                  if (league.idUserAdm == userId)
+                    TextButton(
+                      child: const Text('CONFIRMAR'),
+                      onPressed: () async {
+                        List<UserLeague> usersFilter = users
+                            .where((element) =>
+                                !league.userIds.contains(element.id))
+                            .toList();
+                        await callbackDialogAdd(league, usersFilter);
+                        Navigator.pop(context, true);
+                      },
+                    ),
                 ],
               ));
         });
