@@ -30,4 +30,18 @@ class UpdateLeaguesService extends AbstractService {
         response, "Atualizar regras da liga",
         msgSuccess: "Liga atualizada com sucesso!");
   }
+
+  static Future<CustomMessageResponse> updateLeagueRemoveUser(
+      int id, int userId) async {
+    CustomResponse response = await apiRepo.updateLeagueRemoveUser(id, userId);
+    return AbstractService.validateResponse(response, "Remover participante",
+        msgSuccess: "Participante removido com sucesso!");
+  }
+
+  static Future<CustomMessageResponse> updateLeagueAddUser(
+      int id, List<int> userIds) async {
+    CustomResponse response = await apiRepo.updateLeagueAddUser(id, userIds);
+    return AbstractService.validateResponse(response, "Adicionar participante",
+        msgSuccess: "Participante adicionado com sucesso!");
+  }
 }

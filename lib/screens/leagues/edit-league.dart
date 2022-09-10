@@ -8,6 +8,7 @@ import 'package:bolao_da_copa/style/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/services.dart';
+import '../../components/show-users-league.dart';
 import '../../helper/loading.helper.dart';
 
 class EditLeague extends StatefulWidget {
@@ -156,20 +157,35 @@ class _EditLeagueState extends State<EditLeague>
                               ],
                             )),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Padding(
                                 padding: const EdgeInsets.all(3),
                                 child: ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor: ColorTheme),
-                                  onPressed: () => {},
+                                  onPressed: () async {
+                                    await ShowUsersLeague(context, _league,
+                                        _league.users, _userId, () {});
+                                  },
                                   icon: const Icon(Icons.people),
-                                  label: const Text("Ver Participantes"),
+                                  label: const Text("Participantes"),
                                 )),
                             Padding(
                                 padding: const EdgeInsets.all(3),
                                 child: ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: ColorTheme),
+                                  onPressed: () async {
+                                    await ShowUsersLeague(context, _league,
+                                        _league.users, _userId, () {});
+                                  },
+                                  icon: const Icon(Icons.person_add),
+                                  label: const Text("Add"),
+                                )),
+                            Padding(
+                                padding: const EdgeInsets.all(3),
+                                child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                       backgroundColor: ColorTheme),
                                   onPressed: () async {
@@ -185,8 +201,7 @@ class _EditLeagueState extends State<EditLeague>
                                     LoadingHelper.hide();
                                     ToastHelper.showSuccess(res.message);
                                   },
-                                  icon: const Icon(Icons.save),
-                                  label: const Text("Salvar"),
+                                  child: const Text("Salvar"),
                                 )),
                           ],
                         )

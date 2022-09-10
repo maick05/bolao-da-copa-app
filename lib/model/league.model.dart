@@ -38,8 +38,9 @@ class League extends CustomModelResponse {
 
     for (var element in listUsers) {
       UserLeague user = UserLeague();
-      user.fromMap(element);
-      obj.users.add(user);
+      var userMap = user.fromMap(element);
+      obj.users.add(userMap);
+      users.add(userMap);
     }
 
     return obj;
