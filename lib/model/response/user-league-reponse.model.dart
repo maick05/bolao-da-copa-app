@@ -34,7 +34,7 @@ class UserLeague extends CustomModelResponse {
     UserLeague obj = UserLeague();
     obj.id = mapObj["id"];
     obj.name = mapObj["name"];
-    obj.email = mapObj["email"];
+    obj.email = mapObj["email"] ?? mapObj["username"];
 
     return obj;
   }

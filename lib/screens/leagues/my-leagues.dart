@@ -55,13 +55,13 @@ class _MyLeaguesState extends State<MyLeagues>
                             child: Text("")),
                       ],
                     ),
-                    buildList(_leagues, _userId)
+                    buildList(_leagues, _userId, loadPage)
                   ],
                 ))));
   }
 }
 
-buildList(List<League> leagues, userId) {
+buildList(List<League> leagues, userId, callbackRefresh) {
   if (leagues.isNotEmpty) {
     return Expanded(
         child: SingleChildScrollView(
@@ -107,7 +107,7 @@ buildList(List<League> leagues, userId) {
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       EditLeague(idLeague: league.id),
-                                ));
+                                )).whenComplete(() => callbackRefresh());
                           },
                         ),
                       ),

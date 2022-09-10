@@ -97,6 +97,7 @@ showAlertConfirmDialog(BuildContext context, callback) {
       Navigator.pop(context, true);
     },
   );
+
   Widget continueButton = TextButton(
     child: const Text('CONFIRMAR'),
     onPressed: () {

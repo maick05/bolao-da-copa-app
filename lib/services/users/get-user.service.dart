@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
 
+import 'package:bolao_da_copa/model/response/user-league-reponse.model.dart';
 import 'package:bolao_da_copa/services/abstract.service.dart';
 
 import '../../helper/local-storage.helper.dart';
@@ -25,5 +26,12 @@ class GetUserService extends AbstractService {
         String msg = response.data['message'];
         return CustomMessageResponse(false, "Erro ao buscar usuario: " + msg);
     }
+  }
+
+  static Future<CustomMessageResponse> searchUser(String term) async {
+    CustomResponse response = await apiRepo.searchUser(term);
+
+    return AbstractService.validateGetResponse<UserLeague>(
+        response, "buscar participante", UserLeague());
   }
 }

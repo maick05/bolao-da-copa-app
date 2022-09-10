@@ -22,4 +22,11 @@ class UserApiRepository extends ApiRepository {
           await HttpService.bearerAuthHeader('apiToken'));
     });
   }
+
+  Future<CustomResponse> searchUser(String term) async {
+    return handleRequest(() async {
+      return httpService.makeGet("/users/search/$term",
+          await HttpService.bearerAuthHeader('apiToken'));
+    });
+  }
 }
