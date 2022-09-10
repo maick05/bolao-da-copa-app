@@ -2,6 +2,7 @@ import 'package:bolao_da_copa/helper/local-storage.helper.dart';
 import 'package:bolao_da_copa/model/league.model.dart';
 import 'package:bolao_da_copa/model/response/custom-reponse.model.dart';
 import 'package:bolao_da_copa/services/leagues/get-leagues.service.dart';
+import 'package:bolao_da_copa/style/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/services.dart';
@@ -64,100 +65,127 @@ class _EditLeagueState extends State<EditLeague>
                 onRefresh: () async {
                   await loadPage(widget.idLeague);
                 },
-                child: Container(
-                    margin: const EdgeInsets.all(15),
-                    child: Column(
-                      children: [
-                        Row(
+                child: SingleChildScrollView(
+                    child: Container(
+                        margin: const EdgeInsets.all(15),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Expanded(
-                              child: TextFormField(
-                                controller: _nameCtrl,
-                                decoration: InputDecoration(
-                                    labelText: "Name",
-                                    labelStyle:
-                                        TextStyle(color: Colors.grey[400])),
-                                readOnly: !_isUserAdm,
-                                enabled: _isUserAdm,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: const [
-                            Padding(
-                                padding: EdgeInsets.only(top: 17, bottom: 5),
-                                child: Text(
-                                  "Regras",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                )),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 60,
-                          child: TextFormField(
-                              controller: _exactlyMatchCtrl,
-                              decoration: InputDecoration(
-                                  labelText: "Placar Exato",
-                                  labelStyle:
-                                      TextStyle(color: Colors.grey[400])),
-                              readOnly: !_isUserAdm,
-                              enabled: _isUserAdm,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.digitsOnly
-                              ]),
-                        ),
-                        SizedBox(
-                          height: 60,
-                          child: TextFormField(
-                              controller: _winnerCtrl,
-                              decoration: InputDecoration(
-                                  labelText: "Vencedor ou Empate",
-                                  labelStyle:
-                                      TextStyle(color: Colors.grey[400])),
-                              readOnly: !_isUserAdm,
-                              enabled: _isUserAdm,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.digitsOnly
-                              ]),
-                        ),
-                        SizedBox(
-                          height: 60,
-                          child: TextFormField(
-                              controller: _oneScoreCtrl,
-                              decoration: InputDecoration(
-                                  labelText: "Nº de Gols de um Time",
-                                  labelStyle:
-                                      TextStyle(color: Colors.grey[400])),
-                              readOnly: !_isUserAdm,
-                              enabled: _isUserAdm,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.digitsOnly
-                              ]),
-                        ),
-                        SizedBox(
-                            height: 60,
-                            child: TextFormField(
-                              controller: _penaltWinnerCtrl,
-                              decoration: InputDecoration(
-                                  labelText: "Vencedor de Disputa de Pênaltis",
-                                  labelStyle:
-                                      TextStyle(color: Colors.grey[400])),
-                              readOnly: !_isUserAdm,
-                              enabled: _isUserAdm,
-                              keyboardType: TextInputType.number,
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.digitsOnly
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: TextFormField(
+                                    controller: _nameCtrl,
+                                    decoration: InputDecoration(
+                                        labelText: "Nome",
+                                        labelStyle:
+                                            TextStyle(color: Colors.grey[400])),
+                                    readOnly: !_isUserAdm,
+                                    enabled: _isUserAdm,
+                                  ),
+                                ),
                               ],
-                            )),
-                      ],
-                    )))));
+                            ),
+                            Row(
+                              children: const [
+                                Padding(
+                                    padding:
+                                        EdgeInsets.only(top: 17, bottom: 5),
+                                    child: Text(
+                                      "Regras",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
+                                    )),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 60,
+                              child: TextFormField(
+                                  controller: _exactlyMatchCtrl,
+                                  decoration: InputDecoration(
+                                      labelText: "Placar Exato",
+                                      labelStyle:
+                                          TextStyle(color: Colors.grey[400])),
+                                  readOnly: !_isUserAdm,
+                                  enabled: _isUserAdm,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ]),
+                            ),
+                            SizedBox(
+                              height: 60,
+                              child: TextFormField(
+                                  controller: _winnerCtrl,
+                                  decoration: InputDecoration(
+                                      labelText: "Vencedor ou Empate",
+                                      labelStyle:
+                                          TextStyle(color: Colors.grey[400])),
+                                  readOnly: !_isUserAdm,
+                                  enabled: _isUserAdm,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ]),
+                            ),
+                            SizedBox(
+                              height: 60,
+                              child: TextFormField(
+                                  controller: _oneScoreCtrl,
+                                  decoration: InputDecoration(
+                                      labelText: "Nº de Gols de um Time",
+                                      labelStyle:
+                                          TextStyle(color: Colors.grey[400])),
+                                  readOnly: !_isUserAdm,
+                                  enabled: _isUserAdm,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ]),
+                            ),
+                            SizedBox(
+                                height: 60,
+                                child: TextFormField(
+                                  controller: _penaltWinnerCtrl,
+                                  decoration: InputDecoration(
+                                      labelText:
+                                          "Vencedor de Disputa de Pênaltis",
+                                      labelStyle:
+                                          TextStyle(color: Colors.grey[400])),
+                                  readOnly: !_isUserAdm,
+                                  enabled: _isUserAdm,
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
+                                )),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Padding(
+                                    padding: const EdgeInsets.all(3),
+                                    child: ElevatedButton.icon(
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: ColorTheme),
+                                      onPressed: () => {},
+                                      icon: const Icon(Icons.people),
+                                      label: const Text("Ver Participantes"),
+                                    )),
+                                Padding(
+                                    padding: const EdgeInsets.all(3),
+                                    child: ElevatedButton.icon(
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: ColorTheme),
+                                      onPressed: () => {},
+                                      icon: const Icon(Icons.save),
+                                      label: const Text("Salvar"),
+                                    )),
+                              ],
+                            )
+                          ],
+                        ))))));
   }
 }
 
