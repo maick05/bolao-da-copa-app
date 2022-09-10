@@ -107,7 +107,7 @@ showAlertConfirmDialog(BuildContext context, callback) {
   );
   // set up the AlertDialog
   AlertDialog alert = AlertDialog(
-    title: const Text("AlertDialog"),
+    title: const Text("Atenção"),
     content: const Text("Tem certeza que deseja remover este participante?"),
     actions: [
       cancelButton,

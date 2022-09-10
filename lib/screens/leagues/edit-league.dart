@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:after_layout/after_layout.dart';
 import 'package:flutter/services.dart';
 import '../../components/add-users-league.dart';
-import '../../components/show-users-league.dart';
 import '../../helper/loading.helper.dart';
 import '../../model/response/user-league-reponse.model.dart';
 
@@ -176,8 +175,7 @@ class _EditLeagueState extends State<EditLeague>
                                       ],
                                     )),
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Padding(
                                         padding: const EdgeInsets.all(3),
@@ -185,28 +183,32 @@ class _EditLeagueState extends State<EditLeague>
                                           style: ElevatedButton.styleFrom(
                                               backgroundColor: ColorTheme),
                                           onPressed: () async {
-                                            await ShowUsersLeague(
+                                            await AddUsersLeague(
                                                 context,
                                                 _league,
                                                 _league.users,
-                                                _userId, () {
-                                              loadPage(_league.id);
+                                                _userId,
+                                                addUser, (League league,
+                                                    int idUser) async {
+                                              CustomMessageResponse res =
+                                                  await removeUser(
+                                                      league, idUser);
+                                              if (!res.success) return res;
+
+                                              setState(() {
+                                                league.users.removeWhere(
+                                                    (element) =>
+                                                        element.id == idUser);
+                                                league.userIds.removeWhere(
+                                                    (element) =>
+                                                        element == idUser);
+                                              });
+
+                                              return res;
                                             });
                                           },
-                                          icon: const Icon(Icons.people),
+                                          icon: const Icon(Icons.person),
                                           label: const Text("Participantes"),
-                                        )),
-                                    Padding(
-                                        padding: const EdgeInsets.all(3),
-                                        child: ElevatedButton.icon(
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor: ColorTheme),
-                                          onPressed: () async {
-                                            await AddUsersLeague(
-                                                context, _league, setUsersAdd);
-                                          },
-                                          icon: const Icon(Icons.person_add),
-                                          label: const Text("Add"),
                                         )),
                                     Padding(
                                         padding: const EdgeInsets.all(3),
@@ -249,4 +251,26 @@ updateLeague(id, name, exactlyMatch, winner, oneScore, penaltWinner) async {
   rules.oneScore = int.parse(oneScore);
   rules.penaltWinner = int.parse(penaltWinner);
   return UpdateLeaguesService.updateLeague(id, name, rules);
+}
+
+Future<CustomMessageResponse> addUser(
+    League league, List<UserLeague> users) async {
+  LoadingHelper.show();
+  CustomMessageResponse message =
+      await UpdateLeaguesService.updateLeagueAddUser(
+          league.id, users.map((e) => e.id).toList());
+  LoadingHelper.hide();
+
+  if (!message.success) ToastHelper.showError(message.message);
+  return message;
+}
+
+Future<CustomMessageResponse> removeUser(League league, int idUser) async {
+  LoadingHelper.show();
+  CustomMessageResponse message =
+      await UpdateLeaguesService.updateLeagueRemoveUser(league.id, idUser);
+  LoadingHelper.hide();
+
+  if (!message.success) ToastHelper.showError(message.message);
+  return message;
 }
