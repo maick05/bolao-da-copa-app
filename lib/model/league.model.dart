@@ -1,5 +1,7 @@
 import 'package:bolao_da_copa/model/response/custom-reponse.model.dart';
 
+import 'response/user-league-reponse.model.dart';
+
 class League extends CustomModelResponse {
   int id = 0;
   String name = "";
@@ -7,6 +9,7 @@ class League extends CustomModelResponse {
   int idUserAdm = 0;
   List<int> userIds = [];
   Rule rules = Rule();
+  List<UserLeague> users = [];
 
   @override
   fromMap(Map<String, dynamic> mapObj) {
@@ -26,6 +29,18 @@ class League extends CustomModelResponse {
     obj.rules.oneScore = mapObj['rules']['oneScore'];
     obj.rules.winner = mapObj['rules']['winner'];
     obj.rules.penaltWinner = mapObj['rules']['penaltWinner'];
+
+    List<dynamic> listUsers = [];
+
+    if (mapObj['users'] != null) {
+      listUsers = List<dynamic>.from(mapObj['users']);
+    }
+
+    for (var element in listUsers) {
+      UserLeague user = UserLeague();
+      user.fromMap(element);
+      obj.users.add(user);
+    }
 
     return obj;
   }

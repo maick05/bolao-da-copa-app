@@ -18,7 +18,7 @@ class Classification extends StatefulWidget {
 
 class _ClassificationState extends State<Classification>
     with AfterLayoutMixin<Classification> {
-  List<UserLeague> _users = [];
+  List<UserClassification> _users = [];
   List<League> _leagues = [];
   League? _selectedLeague;
   late final int _userId;
@@ -40,7 +40,7 @@ class _ClassificationState extends State<Classification>
 
     List<League> leagues = first ? await getLeagues(_userId) : _leagues;
     int idSelected = first ? leagues[0].id : selectedLeague;
-    List<UserLeague> users =
+    List<UserClassification> users =
         leagues.isNotEmpty ? await getUsersClassification(idSelected) : [];
 
     setState(() {
@@ -91,7 +91,7 @@ class _ClassificationState extends State<Classification>
   }
 }
 
-buildList(List<UserLeague> users, List<League> leagues) {
+buildList(List<UserClassification> users, List<League> leagues) {
   if (leagues.isNotEmpty) {
     return Expanded(
         child: SingleChildScrollView(

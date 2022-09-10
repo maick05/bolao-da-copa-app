@@ -24,6 +24,22 @@ abstract class AbstractService {
     }
   }
 
+  static CustomMessageResponse validateResponse(
+      CustomResponse response, String action,
+      {String msgSuccess = ""}) {
+    switch (response.status) {
+      case 200:
+      case 201:
+      case 202:
+      case 203:
+      case 204:
+        return CustomMessageResponse(true, msgSuccess);
+      default:
+        return CustomMessageResponse(
+            false, "Erro ao " + action + ": " + response.data['message']);
+    }
+  }
+
   static dynamic makeFromMap<ResponseListType>(
       dynamic dataMap, CustomModelResponse objectResp, bool list) {
     if (dataMap == null || dataMap.isEmpty) return list ? [] : null;

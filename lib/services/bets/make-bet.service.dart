@@ -2,7 +2,6 @@ import 'package:bolao_da_copa/model/dto/push-bet.dto.dart';
 import 'package:bolao_da_copa/repository/api/bets.repository.dart';
 import 'package:bolao_da_copa/services/abstract.service.dart';
 
-import '../../model/match.model.dart';
 import '../../model/response/custom-reponse.model.dart';
 
 final BetsApiRepository apiRepo = BetsApiRepository();
@@ -25,7 +24,6 @@ class MakeBetService extends AbstractService {
     bet.scoreOutside = scoreOutside;
 
     CustomResponse response = await apiRepo.pushBet(bet);
-    return AbstractService.validateGetResponse<Bet>(
-        response, "fazer palpite", Bet());
+    return AbstractService.validateResponse(response, "fazer palpite");
   }
 }

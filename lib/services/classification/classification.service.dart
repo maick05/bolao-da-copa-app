@@ -13,7 +13,7 @@ class ClassificationService extends AbstractService {
       int idUser) async {
     CustomResponse response = await apiRepo.getClassificationByLeague(idUser);
 
-    return AbstractService.validateGetResponse<UserLeague>(
-        response, "buscar classificação", UserLeague());
+    return AbstractService.validateGetResponse<UserClassification>(
+        response, "buscar classificação", UserClassification());
   }
 }
