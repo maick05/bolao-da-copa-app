@@ -15,4 +15,12 @@ class GetLeaguesService extends AbstractService {
     return AbstractService.validateGetResponse<League>(
         response, "buscar ligas", League());
   }
+
+  static Future<CustomMessageResponse> getLeagueById(int id) async {
+    CustomResponse response = await apiRepo.getLeagueById(id);
+
+    return AbstractService.validateGetResponse<League>(
+        response, "buscar liga", League(),
+        list: false);
+  }
 }

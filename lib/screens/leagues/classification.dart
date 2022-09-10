@@ -9,12 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:after_layout/after_layout.dart';
 import '../../helper/loading.helper.dart';
 
-// RoundCompetition firstRound() {
-//   var round = RoundCompetition();
-//   round.id = -1;
-//   return round;
-// }
-
 class Classification extends StatefulWidget {
   const Classification({Key? key}) : super(key: key);
 
@@ -62,43 +56,38 @@ class _ClassificationState extends State<Classification>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Padding(
-                    padding:
-                        const EdgeInsets.only(left: 10, top: 10, right: 44),
-                    child: ElevatedButton(
-                        onPressed: () {
-                          return;
-                        },
-                        child: const Text("Todas as Ligas"))),
-                Padding(
-                    padding: const EdgeInsets.only(top: 1),
-                    child: Center(
-                        child: DropdownButton<League>(
-                      items: _leagues.map((item) {
-                        return DropdownMenuItem<League>(
-                          child: Text(item.name),
-                          value: item,
-                        );
-                      }).toList(),
-                      onChanged: (newVal) async {
-                        if (newVal == null) {
-                          return;
-                        }
-                        await loadPage(false, selectedLeague: newVal.id);
-                      },
-                      value: _selectedLeague,
-                    ))),
-              ],
-            ),
-            buildList(_users, _leagues)
-          ],
-        ));
+    return MaterialApp(
+        home: Scaffold(
+            body: Container(
+                margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Padding(
+                            padding: const EdgeInsets.only(top: 1),
+                            child: Center(
+                                child: DropdownButton<League>(
+                              items: _leagues.map((item) {
+                                return DropdownMenuItem<League>(
+                                  child: Text(item.name),
+                                  value: item,
+                                );
+                              }).toList(),
+                              onChanged: (newVal) async {
+                                if (newVal == null) {
+                                  return;
+                                }
+                                await loadPage(false,
+                                    selectedLeague: newVal.id);
+                              },
+                              value: _selectedLeague,
+                            ))),
+                      ],
+                    ),
+                    buildList(_users, _leagues)
+                  ],
+                ))));
   }
 }
 

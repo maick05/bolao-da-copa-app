@@ -1,7 +1,9 @@
 import 'package:bolao_da_copa/screens/rounds/rounds.dart';
 import 'package:flutter/material.dart';
 
+import '../style/theme.dart';
 import 'leagues/classification.dart';
+import 'leagues/my-leagues.dart';
 
 void main() {
   runApp(const HomeTabBar());
@@ -15,7 +17,7 @@ class HomeTabBar extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
           appBarTheme: const AppBarTheme(
-        color: Color(0xFF8D1B3D),
+        color: ColorTheme,
       )),
       home: DefaultTabController(
           length: 3,
@@ -26,11 +28,11 @@ class HomeTabBar extends StatelessWidget {
             child: Scaffold(
               appBar: AppBar(
                 bottom: const TabBar(
-                  indicatorColor: Color(0xFF8D1B3D),
+                  indicatorColor: ColorTheme,
                   tabs: [
                     Tab(icon: Icon(Icons.calendar_month)),
+                    Tab(icon: Icon(Icons.workspace_premium)),
                     Tab(icon: Icon(Icons.group)),
-                    Tab(icon: Icon(Icons.star)),
                   ],
                 ),
                 title: const Text('Bolão da Copa'),
@@ -38,8 +40,8 @@ class HomeTabBar extends StatelessWidget {
               body: TabBarView(
                 children: [
                   Rounds(),
-                  Classification(),
-                  const Icon(Icons.star),
+                  const Classification(),
+                  const MyLeagues(),
                 ],
               ),
             ),

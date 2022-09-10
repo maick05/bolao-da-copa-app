@@ -9,6 +9,7 @@ import 'package:toggle_switch/toggle_switch.dart';
 import '../../components/item-match.dart';
 import '../../helper/loading.helper.dart';
 import '../../helper/toast.helper.dart';
+import '../../style/theme.dart';
 
 RoundCompetition firstRound() {
   var round = RoundCompetition();
@@ -99,7 +100,7 @@ class _RoundsState extends State<Rounds> with AfterLayoutMixin<Rounds> {
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: ToggleSwitch(
-                        activeBgColor: const [Color(0xFF8D1B3D)],
+                        activeBgColor: const [ColorTheme],
                         minWidth: 100,
                         initialLabelIndex: selectedMatchType,
                         totalSwitches: 2,
@@ -185,10 +186,6 @@ Future<ActualRound> loadRounds() async {
   ActualRound data = response.message;
   return data;
 }
-
-// getRounds() async {
-//   return LocalStorageHelper.getValueIfNotExists("rounds", getDBRounds());
-// }
 
 getDBRounds() async {
   CustomMessageResponse res = await GetRoundsService.getRounds();

@@ -18,13 +18,14 @@ class LoginService {
             false, "Usuário e/ou senha são inválido(s)");
       case 200:
       case 201:
+        await LocalStorageHelper.setValue<String>(
+            'apiToken', response.data['token']);
+
         CustomMessageResponse resUser =
             await GetUserService.getUserByUsername(username);
 
         if (!resUser.success) return resUser;
 
-        await LocalStorageHelper.setValue<String>(
-            'apiToken', response.data['token']);
         return CustomMessageResponse(true, "");
       default:
         return CustomMessageResponse(

@@ -10,4 +10,11 @@ class LeaguesApiRepository extends ApiRepository {
           await HttpService.bearerAuthHeader('apiToken'));
     });
   }
+
+  Future<CustomResponse> getLeagueById(int id) async {
+    return handleRequest(() async {
+      return httpService.makeGet("/leagues/details/$id",
+          await HttpService.bearerAuthHeader('apiToken'));
+    });
+  }
 }
