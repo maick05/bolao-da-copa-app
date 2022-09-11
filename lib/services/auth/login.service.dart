@@ -35,6 +35,7 @@ class LoginService {
 
         return CustomMessageResponse(true, "");
       default:
+        print(response.data);
         return CustomMessageResponse(
             false, "Erro ao fazer login: " + response.data.message);
     }

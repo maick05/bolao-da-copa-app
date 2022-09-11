@@ -12,7 +12,7 @@ class CreateUserService {
     CustomResponse response =
         await apiRepo.createUser(name, username, password);
 
-    String msg = response.data['message'];
+    dynamic msg = response.data['message'];
     switch (response.status) {
       case 200:
       case 201:

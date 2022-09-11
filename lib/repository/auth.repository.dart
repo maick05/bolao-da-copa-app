@@ -7,7 +7,7 @@ class AuthRepository {
 
   Future<CustomResponse> login(String username, String password) async {
     try {
-      return httpService.makePost('/auth/login', ["BOLAO_DA_COPA/ALL/ADM"],
+      return httpService.makePost('/auth/login', ["BOLAO_DA_COPA/ALL/USER"],
           HttpService.basicAuthHeader(username, password));
     } on Exception catch (e) {
       return CustomResponse(500, e);
