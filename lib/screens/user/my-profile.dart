@@ -93,10 +93,10 @@ class _MyProfileState extends State<MyProfile>
                                       onPressed: () async {
                                         showAlertConfirmDialog(context,
                                             () async {
-                                          LoadingHelper.show();
+                                          await LoadingHelper.show();
                                           CustomMessageResponse res =
                                               await inactive(_userId);
-                                          LoadingHelper.hide();
+                                          await LoadingHelper.hide();
 
                                           if (!res.success) return;
 
@@ -172,8 +172,8 @@ showAlertConfirmDialog(BuildContext context, callback) {
           TextButton(
             child: const Text('CONFIRMAR'),
             onPressed: () async {
-              await callback();
               Navigator.pop(context, true);
+              callback();
             },
           ),
         ],
