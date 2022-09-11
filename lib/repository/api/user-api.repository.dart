@@ -36,4 +36,21 @@ class UserApiRepository extends ApiRepository {
           "/users/details/$id", await HttpService.bearerAuthHeader('apiToken'));
     });
   }
+
+  Future<CustomResponse> updateUser(int id, String name) async {
+    return handleRequest(() async {
+      final Map<String, String> user = {
+        "name": name,
+      };
+      return httpService.makePost('/users/update/$id', user,
+          await HttpService.bearerAuthHeader('apiToken'));
+    });
+  }
+
+  Future<CustomResponse> inactivateUser(int id) async {
+    return handleRequest(() async {
+      return httpService.makePost('/users/inactivate/$id', {},
+          await HttpService.bearerAuthHeader('apiToken'));
+    });
+  }
 }

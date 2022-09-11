@@ -42,4 +42,9 @@ class LocalStorageHelper {
     SharedPreferences prefs = await getPrefs();
     prefs.remove(key);
   }
+
+  static clear() async {
+    SharedPreferences prefs = await getPrefs();
+    prefs.clear();
+  }
 }
