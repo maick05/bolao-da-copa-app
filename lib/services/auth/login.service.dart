@@ -24,7 +24,14 @@ class LoginService {
         CustomMessageResponse resUser =
             await GetUserService.getUserByUsername(username);
 
-        if (!resUser.success) return resUser;
+        if (!resUser.success) {
+          await LocalStorageHelper.clear();
+          if (resUser.status == 404) {
+            return CustomMessageResponse(
+                false, "Usuário e/ou senha são inválido(s)");
+          }
+          return resUser;
+        }
 
         return CustomMessageResponse(true, "");
       default:

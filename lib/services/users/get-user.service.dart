@@ -21,10 +21,14 @@ class GetUserService extends AbstractService {
       case 203:
       case 204:
         await LocalStorageHelper.setValue<int>('userId', response.data['id']);
-        return CustomMessageResponse(true, response.data);
+        return CustomMessageResponse(
+          true,
+          response.data,
+        );
       default:
         String msg = response.data['message'];
-        return CustomMessageResponse(false, "Erro ao buscar usuario: " + msg);
+        return CustomMessageResponse(false, "Erro ao buscar usuario: " + msg,
+            status: response.status);
     }
   }
 

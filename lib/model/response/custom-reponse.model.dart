@@ -7,7 +7,8 @@ class CustomResponse<DataResponse> {
 class CustomMessageResponse<DataResponse> {
   bool success = false;
   DataResponse message;
-  CustomMessageResponse(this.success, this.message);
+  int? status;
+  CustomMessageResponse(this.success, this.message, {this.status = 200});
 }
 
 abstract class CustomModelResponse {
