@@ -34,4 +34,12 @@ class GetUserService extends AbstractService {
     return AbstractService.validateGetResponse<UserLeague>(
         response, "buscar participante", UserLeague());
   }
+
+  static Future<CustomMessageResponse> getById(int id) async {
+    CustomResponse response = await apiRepo.getById(id);
+
+    return AbstractService.validateGetResponse<UserLeague>(
+        response, "buscar usuário", UserLeague(),
+        list: false);
+  }
 }

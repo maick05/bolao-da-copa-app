@@ -1,8 +1,12 @@
 import 'package:bolao_da_copa/helper/local-storage.helper.dart';
+import 'package:bolao_da_copa/helper/toast.helper.dart';
 import 'package:bolao_da_copa/model/league.model.dart';
 import 'package:bolao_da_copa/model/response/custom-reponse.model.dart';
+import 'package:bolao_da_copa/screens/leagues/create-league.dart';
 import 'package:bolao_da_copa/screens/leagues/edit-league.dart';
+import 'package:bolao_da_copa/services/leagues/delete-league.service.dart';
 import 'package:bolao_da_copa/services/leagues/get-leagues.service.dart';
+import 'package:bolao_da_copa/style/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:after_layout/after_layout.dart';
 import '../../helper/loading.helper.dart';
@@ -43,21 +47,33 @@ class _MyLeaguesState extends State<MyLeagues>
   Widget build(BuildContext context) {
     return MaterialApp(
         home: Scaffold(
-            body: Container(
-                margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
-                child: Column(
-                  children: [
-                    Row(
-                      children: const [
-                        Padding(
-                            padding:
-                                EdgeInsets.only(left: 10, top: 10, right: 44),
-                            child: Text("")),
-                      ],
-                    ),
-                    buildList(_leagues, _userId, loadPage)
-                  ],
-                ))));
+      body: Container(
+          margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+          child: Column(
+            children: [
+              Row(
+                children: const [
+                  Padding(
+                      padding: EdgeInsets.only(left: 10, top: 10, right: 44),
+                      child: Text("")),
+                ],
+              ),
+              buildList(_leagues, _userId, loadPage)
+            ],
+          )),
+      floatingActionButton: FloatingActionButton(
+        tooltip: "Criar Liga",
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const CreateLeague(),
+              )).whenComplete(() => loadPage());
+        },
+        backgroundColor: ColorTheme,
+        child: const Icon(Icons.add),
+      ),
+    ));
   }
 }
 
@@ -118,7 +134,20 @@ buildList(List<League> leagues, userId, callbackRefresh) {
                               tooltip: "Deletar Liga",
                               icon: const Icon(Icons.delete),
                               color: Colors.red,
-                              onPressed: () {},
+                              onPressed: () {
+                                showAlertConfirmDialog(context, () async {
+                                  CustomMessageResponse res =
+                                      await DeleteLeagueService.deleteLeague(
+                                          league.id);
+                                  if (!res.success) {
+                                    ToastHelper.showError(res.message);
+                                    return;
+                                  }
+
+                                  await ToastHelper.showSuccess(res.message);
+                                  callbackRefresh();
+                                });
+                              },
                             ))
                     ]),
                   ));
@@ -137,4 +166,34 @@ buildList(List<League> leagues, userId, callbackRefresh) {
 getLeagues(int userId) async {
   CustomMessageResponse res = await GetLeaguesService.getLeaguesByUser(userId);
   return res.message;
+}
+
+showAlertConfirmDialog(BuildContext context, callback) {
+  // set up the buttons
+  // set up the AlertDialog
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text("Atenção"),
+        content: const Text("Tem certeza que deseja excluir essa liga?"),
+        actions: [
+          TextButton(
+            child: const Text('CANCELAR'),
+            onPressed: () {
+              Navigator.pop(context, true);
+            },
+          ),
+          TextButton(
+            child: const Text('CONFIRMAR'),
+            onPressed: () async {
+              await callback();
+              Navigator.pop(context, true);
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

@@ -116,7 +116,8 @@ Future<void> AddUsersLeague(
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(user.email),
-                                            if (league.idUserAdm == userId)
+                                            if (league.idUserAdm == userId &&
+                                                user.id != userId)
                                               Wrap(
                                                   direction: Axis.horizontal,
                                                   alignment: WrapAlignment.end,

@@ -29,4 +29,11 @@ class UserApiRepository extends ApiRepository {
           await HttpService.bearerAuthHeader('apiToken'));
     });
   }
+
+  Future<CustomResponse> getById(int id) async {
+    return handleRequest(() async {
+      return httpService.makeGet(
+          "/users/details/$id", await HttpService.bearerAuthHeader('apiToken'));
+    });
+  }
 }

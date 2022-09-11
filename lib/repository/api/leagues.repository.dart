@@ -54,4 +54,25 @@ class LeaguesApiRepository extends ApiRepository {
           await HttpService.bearerAuthHeader('apiToken'));
     });
   }
+
+  Future<CustomResponse> createLeague(String name, List<int> userIds) async {
+    final Map<String, dynamic> req = {
+      "name": name,
+      "userIds": userIds,
+      "idCompetition": 1,
+      "edition": 2022,
+    };
+
+    return handleRequest(() async {
+      return httpService.makePost("/leagues/create", req,
+          await HttpService.bearerAuthHeader('apiToken'));
+    });
+  }
+
+  Future<CustomResponse> deleteLeague(int id) async {
+    return handleRequest(() async {
+      return httpService.makeDelete("/leagues/delete/$id",
+          await HttpService.bearerAuthHeader('apiToken'));
+    });
+  }
 }

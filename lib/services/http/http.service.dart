@@ -37,6 +37,21 @@ class HttpService {
         res.statusCode, res.body.isNotEmpty ? (json.decode(res.body)) : {});
   }
 
+  Future<CustomResponse<DataResponse>> makeDelete<DataResponse>(
+      String endpoint, String auth) async {
+    var uri = Uri.parse(url + endpoint);
+    print('making delete...' + uri.toString());
+
+    Response res = await delete(uri, headers: <String, String>{
+      "Authorization": auth,
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    });
+
+    return CustomResponse(
+        res.statusCode, res.body.isNotEmpty ? (json.decode(res.body)) : {});
+  }
+
   static String basicAuthHeader(String username, String password) {
     return 'Basic ' + base64.encode(utf8.encode('$username:$password'));
   }
