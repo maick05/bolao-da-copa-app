@@ -91,16 +91,19 @@ class _MyProfileState extends State<MyProfile>
                                       style: ElevatedButton.styleFrom(
                                           backgroundColor: ColorTheme),
                                       onPressed: () async {
-                                        LoadingHelper.show();
-                                        CustomMessageResponse res =
-                                            await inactive(_userId);
-                                        LoadingHelper.hide();
+                                        showAlertConfirmDialog(context,
+                                            () async {
+                                          LoadingHelper.show();
+                                          CustomMessageResponse res =
+                                              await inactive(_userId);
+                                          LoadingHelper.hide();
 
-                                        if (!res.success) return;
+                                          if (!res.success) return;
 
-                                        await ToastHelper.showSuccess(
-                                            res.message);
-                                        await logout(context);
+                                          await ToastHelper.showSuccess(
+                                              res.message);
+                                          await logout(context);
+                                        });
                                       },
                                       icon:
                                           const Icon(Icons.disabled_by_default),
@@ -147,4 +150,34 @@ Future<CustomMessageResponse> inactive(int id) async {
 
   if (!message.success) await ToastHelper.showError(message.message);
   return message;
+}
+
+showAlertConfirmDialog(BuildContext context, callback) {
+  // set up the buttons
+  // set up the AlertDialog
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text("Atenção"),
+        content: const Text("Tem certeza que deseja inativar sua conta?"),
+        actions: [
+          TextButton(
+            child: const Text('CANCELAR'),
+            onPressed: () {
+              Navigator.pop(context, true);
+            },
+          ),
+          TextButton(
+            child: const Text('CONFIRMAR'),
+            onPressed: () async {
+              await callback();
+              Navigator.pop(context, true);
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

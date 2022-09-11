@@ -233,6 +233,35 @@ class _EditLeagueState extends State<EditLeague>
                                             label: const Text("Salvar"),
                                             icon: const Icon(Icons.save),
                                           )),
+                                    if (!_isUserAdm)
+                                      Padding(
+                                          padding: const EdgeInsets.all(3),
+                                          child: ElevatedButton.icon(
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor: ColorTheme),
+                                            onPressed: () async {
+                                              showAlertConfirmDialog(context,
+                                                  () async {
+                                                LoadingHelper.show();
+                                                CustomMessageResponse res =
+                                                    await UpdateLeaguesService
+                                                        .updateLeagueRemoveUser(
+                                                            _league.id,
+                                                            _userId);
+                                                LoadingHelper.hide();
+                                                if (!res.success) {
+                                                  ToastHelper.showError(
+                                                      res.message);
+                                                  return;
+                                                }
+                                                await ToastHelper.showSuccess(
+                                                    res.message);
+                                                Navigator.pop(context, true);
+                                              });
+                                            },
+                                            label: const Text("Sair da Liga"),
+                                            icon: const Icon(Icons.exit_to_app),
+                                          )),
                                   ],
                                 )
                               ],
@@ -275,4 +304,34 @@ Future<CustomMessageResponse> removeUser(League league, int idUser) async {
 
   if (!message.success) ToastHelper.showError(message.message);
   return message;
+}
+
+showAlertConfirmDialog(BuildContext context, callback) {
+  // set up the buttons
+  // set up the AlertDialog
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text("Atenção"),
+        content: const Text("Tem certeza que deseja sair dessa liga?"),
+        actions: [
+          TextButton(
+            child: const Text('CANCELAR'),
+            onPressed: () {
+              Navigator.pop(context, true);
+            },
+          ),
+          TextButton(
+            child: const Text('CONFIRMAR'),
+            onPressed: () async {
+              await callback();
+              Navigator.pop(context, true);
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
