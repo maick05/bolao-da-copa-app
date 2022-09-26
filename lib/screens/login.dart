@@ -96,7 +96,7 @@ class _MyLoginState extends State<MyLogin> {
                           color: Colors.white,
                           onPressed: () async {
                             usernameController.text = 'maick@devseeder.com';
-                            passwordController.text = 'cosmos#1797';
+                            passwordController.text = '12345';
 
                             LoadingHelper.show();
                             bool isLoginValid = await logar(

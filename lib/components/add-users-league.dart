@@ -7,7 +7,7 @@ import '../model/response/custom-reponse.model.dart';
 import '../services/users/get-user.service.dart';
 import 'package:collection/collection.dart';
 
-Future<void> AddUsersLeague(
+Future<void> addUsersLeague(
     BuildContext context,
     League league,
     List<UserLeague> users,

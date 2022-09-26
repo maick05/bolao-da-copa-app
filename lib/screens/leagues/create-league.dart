@@ -81,7 +81,7 @@ class _CreateLeagueState extends State<CreateLeague>
                                         League league = League();
                                         league.idUserAdm = _userId;
                                         league.userIds = _userIds;
-                                        await AddUsersLeague(
+                                        await addUsersLeague(
                                             context, league, _users, _userId,
                                             (League league,
                                                 List<UserLeague> usersAdd) {

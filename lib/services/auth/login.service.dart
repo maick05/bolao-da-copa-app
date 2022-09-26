@@ -20,6 +20,7 @@ class LoginService {
       case 201:
         await LocalStorageHelper.setValue<String>(
             'apiToken', response.data['token']);
+        await LocalStorageHelper.setValue<String>('username', username);
 
         CustomMessageResponse resUser =
             await GetUserService.getUserByUsername(username);

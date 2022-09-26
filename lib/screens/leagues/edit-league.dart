@@ -183,7 +183,7 @@ class _EditLeagueState extends State<EditLeague>
                                           style: ElevatedButton.styleFrom(
                                               backgroundColor: ColorTheme),
                                           onPressed: () async {
-                                            await AddUsersLeague(
+                                            await addUsersLeague(
                                                 context,
                                                 _league,
                                                 _league.users,

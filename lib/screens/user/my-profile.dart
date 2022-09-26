@@ -2,6 +2,7 @@ import 'package:bolao_da_copa/helper/local-storage.helper.dart';
 import 'package:bolao_da_copa/helper/toast.helper.dart';
 import 'package:bolao_da_copa/model/response/custom-reponse.model.dart';
 import 'package:bolao_da_copa/screens/user/logout.dart';
+import 'package:bolao_da_copa/screens/user/update-password.dart';
 import 'package:bolao_da_copa/services/users/get-user.service.dart';
 import 'package:bolao_da_copa/services/users/update-user.service%20.dart';
 import 'package:bolao_da_copa/style/theme.dart';
@@ -126,6 +127,27 @@ class _MyProfileState extends State<MyProfile>
                                       },
                                       label: const Text("Salvar"),
                                       icon: const Icon(Icons.save),
+                                    )),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Padding(
+                                    padding: const EdgeInsets.all(3),
+                                    child: ElevatedButton.icon(
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: ColorTheme),
+                                      onPressed: () async {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const UpdatePassword(),
+                                            ));
+                                      },
+                                      label: const Text("Alterar Senha"),
+                                      icon: const Icon(Icons.key),
                                     )),
                               ],
                             )
