@@ -3,7 +3,9 @@
 import 'package:bolao_da_copa/helper/loading.helper.dart';
 import 'package:bolao_da_copa/model/response/custom-reponse.model.dart';
 import 'package:bolao_da_copa/screens/home.dart';
+import 'package:bolao_da_copa/screens/user/update-password.dart';
 import 'package:bolao_da_copa/services/auth/login.service.dart';
+import 'package:bolao_da_copa/services/auth/update-password.service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -54,7 +56,7 @@ class _MyLoginState extends State<MyLogin> {
                     decoration: InputDecoration(
                       fillColor: Colors.grey.shade100,
                       filled: true,
-                      hintText: 'Nome de Usuário ou Email',
+                      hintText: 'Email',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -96,7 +98,7 @@ class _MyLoginState extends State<MyLogin> {
                           color: Colors.white,
                           onPressed: () async {
                             usernameController.text = 'maick@devseeder.com';
-                            passwordController.text = '12345';
+                            passwordController.text = '123456';
 
                             LoadingHelper.show();
                             bool isLoginValid = await logar(
@@ -137,7 +139,15 @@ class _MyLoginState extends State<MyLogin> {
                           ),
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            if (usernameController.text.isEmpty) {
+                              ToastHelper.showError(
+                                  "O campo e-mail deve ser preenchido para recuperar a senha!");
+                              return;
+                            }
+                            await forgotPassword(
+                                context, usernameController.text);
+                          },
                           child: const Text(
                             'Esqueci minha senha',
                             style: TextStyle(
@@ -178,4 +188,139 @@ Future<bool> logar(String username, String password) async {
     return false;
   }
   return true;
+}
+
+Future<void> forgotPassword(BuildContext contextDialog, String email) async {
+  TextEditingController _emailPass = TextEditingController();
+  TextEditingController _codeCtrl = TextEditingController();
+  _emailPass.text = email;
+  bool codeSent = false;
+  return showDialog(
+      context: contextDialog,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            scrollable: true,
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            title: const Text('Recuperar Senha'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _emailPass,
+                        enabled: false,
+                        readOnly: true,
+                        style: TextStyle(color: Colors.grey[400]),
+                      ),
+                    ),
+                  ],
+                ),
+                if (codeSent)
+                  Row(children: const [Text("Código enviado por e-mail!")]),
+                if (codeSent)
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: _codeCtrl,
+                          decoration: InputDecoration(
+                              labelText: "Digite o código",
+                              labelStyle: TextStyle(color: Colors.grey[400])),
+                          style: TextStyle(color: Colors.grey[400]),
+                        ),
+                      ),
+                    ],
+                  )
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('FECHAR'),
+                onPressed: () {
+                  Navigator.pop(context, true);
+                },
+              ),
+              TextButton(
+                child: Text(codeSent ? "CONFIRMAR" : "ENVIAR"),
+                onPressed: () async {
+                  if (!codeSent) {
+                    CustomMessageResponse msg = await sendEmailPass(email);
+                    // if (!msg.success) return;
+
+                    setState(() => {codeSent = true});
+                  } else {
+                    CustomMessageResponse msg =
+                        await confirmCodeForgotPassword(email, _codeCtrl.text);
+
+                    if (!msg.success) return;
+
+                    ToastHelper.show("Código confirmado com sucesso!");
+
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => UpdatePassword(
+                              (actualPass, newPass, confirmPass) async {
+                            await updateForgotPassword(
+                              actualPass,
+                              newPass,
+                              confirmPass,
+                              msg.message.validationTokenId,
+                              msg.message.validationCode,
+                            );
+                          }),
+                        ));
+                  }
+                },
+              ),
+            ],
+          );
+        });
+      });
+}
+
+Future<CustomMessageResponse> sendEmailPass(String email) async {
+  LoadingHelper.show();
+  CustomMessageResponse response =
+      await UpdatePasswordService.forgotPassword(email);
+  if (!response.success) {
+    ToastHelper.showError("Erro ao enviar email: " + response.message);
+  }
+
+  LoadingHelper.hide();
+  return response;
+}
+
+Future<CustomMessageResponse> confirmCodeForgotPassword(
+    String email, String code) async {
+  LoadingHelper.show();
+  CustomMessageResponse response =
+      await UpdatePasswordService.confirmCodeForgotPassword(email, code);
+  if (!response.success || !response.message.success) {
+    ToastHelper.showError("Código Inválido");
+  }
+
+  LoadingHelper.hide();
+  return response;
+}
+
+Future<CustomMessageResponse> updateForgotPassword(
+    String actualPass,
+    String newPass,
+    String confirmPass,
+    String validationTokenId,
+    String validationCode) async {
+  LoadingHelper.show();
+  CustomMessageResponse response =
+      await UpdatePasswordService.updateForgotUserPassword(
+          actualPass, newPass, confirmPass, validationTokenId, validationCode);
+  if (!response.success || !response.message.success) {
+    ToastHelper.showError("Erro ao atualizar senha");
+  }
+
+  LoadingHelper.hide();
+  return response;
 }

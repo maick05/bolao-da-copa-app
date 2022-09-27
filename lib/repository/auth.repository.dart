@@ -52,4 +52,61 @@ class AuthRepository {
       return CustomResponse(500, e);
     }
   }
+
+  Future<CustomResponse> updateForgotUserPassword(
+      String username,
+      String actualPass,
+      String newPass,
+      String confirmPass,
+      String validationTokenId,
+      String validationCode) async {
+    final Map<String, String> body = {
+      "username": username,
+      "projectKey": "BOLAO_DA_COPA",
+      "actualPassword": actualPass,
+      "newPassword": newPass,
+      "confirmPassword": confirmPass,
+      "validationTokenId": validationTokenId,
+      "validationCode": validationCode
+    };
+    try {
+      return httpService.makePost('/security/password/forgot/update', body,
+          await HttpService.bearerAuthHeader('apiToken'));
+    } on Exception catch (e) {
+      return CustomResponse(500, e);
+    } on Error catch (e) {
+      return CustomResponse(500, e);
+    }
+  }
+
+  Future<CustomResponse> forgotPassword(String username) async {
+    final Map<String, String> body = {
+      "username": username,
+      "projectKey": "BOLAO_DA_COPA"
+    };
+    try {
+      return httpService.makePost('/security/password/forgot', body, '');
+    } on Exception catch (e) {
+      return CustomResponse(500, e);
+    } on Error catch (e) {
+      return CustomResponse(500, e);
+    }
+  }
+
+  Future<CustomResponse> confirmCodeForgotPassword(
+      String username, String code) async {
+    final Map<String, String> body = {
+      "username": username,
+      "projectKey": "BOLAO_DA_COPA",
+      "code": code
+    };
+    try {
+      return httpService.makePost(
+          '/security/password/forgot/confirm', body, '');
+    } on Exception catch (e) {
+      return CustomResponse(500, e);
+    } on Error catch (e) {
+      return CustomResponse(500, e);
+    }
+  }
 }

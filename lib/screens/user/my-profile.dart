@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:after_layout/after_layout.dart';
 import '../../helper/loading.helper.dart';
 import '../../model/response/user-league-reponse.model.dart';
+import '../../services/auth/update-password.service.dart';
 
 class MyProfile extends StatefulWidget {
   const MyProfile({Key? key}) : super(key: key);
@@ -143,7 +144,13 @@ class _MyProfileState extends State<MyProfile>
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  const UpdatePassword(),
+                                                  UpdatePassword((actualPass,
+                                                      newPass, confirmPass) {
+                                                return updateUserPassword(
+                                                    actualPass,
+                                                    newPass,
+                                                    confirmPass);
+                                              }),
                                             ));
                                       },
                                       label: const Text("Alterar Senha"),
@@ -202,4 +209,16 @@ showAlertConfirmDialog(BuildContext context, callback) {
       );
     },
   );
+}
+
+Future<CustomMessageResponse> updateUserPassword(
+    String actualPass, String newPass, String confirmPass) async {
+  LoadingHelper.show();
+  CustomMessageResponse message =
+      await UpdatePasswordService.updateUserPassword(
+          actualPass, newPass, confirmPass);
+  LoadingHelper.hide();
+
+  if (!message.success) await ToastHelper.showError(message.message);
+  return message;
 }

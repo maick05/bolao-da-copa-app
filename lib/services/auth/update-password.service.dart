@@ -17,4 +17,41 @@ class UpdatePasswordService {
     return AbstractService.validateResponse(
         response, "atualizar senha do usuário");
   }
+
+  static Future<CustomMessageResponse> updateForgotUserPassword(
+      String actualPass,
+      String newPass,
+      String confirmPass,
+      String validationTokenId,
+      String validationCode) async {
+    var authRepo = AuthRepository();
+    CustomResponse response = await authRepo.updateForgotUserPassword(
+        await LocalStorageHelper.getValue('username'),
+        actualPass,
+        newPass,
+        confirmPass,
+        validationTokenId,
+        validationCode);
+
+    return AbstractService.validateResponse(
+        response, "atualizar senha do usuário");
+  }
+
+  static Future<CustomMessageResponse> forgotPassword(String username) async {
+    var authRepo = AuthRepository();
+    CustomResponse response = await authRepo.forgotPassword(username);
+
+    return AbstractService.validateResponse(
+        response, "enviar código para recuperar senha");
+  }
+
+  static Future<CustomMessageResponse> confirmCodeForgotPassword(
+      String username, String code) async {
+    var authRepo = AuthRepository();
+    CustomResponse response =
+        await authRepo.confirmCodeForgotPassword(username, code);
+
+    return AbstractService.validateResponse(
+        response, "confirmar código para recuperar senha");
+  }
 }

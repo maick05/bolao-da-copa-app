@@ -1,14 +1,12 @@
 import 'package:bolao_da_copa/helper/toast.helper.dart';
-import 'package:bolao_da_copa/services/auth/update-password.service.dart';
 import 'package:bolao_da_copa/style/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:after_layout/after_layout.dart';
-import '../../helper/loading.helper.dart';
 import '../../model/response/custom-reponse.model.dart';
-import '../../model/response/user-league-reponse.model.dart';
 
 class UpdatePassword extends StatefulWidget {
-  const UpdatePassword({Key? key}) : super(key: key);
+  final callbackUpdate;
+  const UpdatePassword(this.callbackUpdate, {Key? key}) : super(key: key);
 
   @override
   _UpdatePasswordState createState() => _UpdatePasswordState();
@@ -16,9 +14,6 @@ class UpdatePassword extends StatefulWidget {
 
 class _UpdatePasswordState extends State<UpdatePassword>
     with AfterLayoutMixin<UpdatePassword> {
-  late final int _userId;
-  final UserLeague _user = UserLeague();
-
   final TextEditingController _actualPass = TextEditingController();
   final TextEditingController _newPass = TextEditingController();
   final TextEditingController _confirmPass = TextEditingController();
@@ -109,7 +104,7 @@ class _UpdatePasswordState extends State<UpdatePassword>
                                         }
 
                                         CustomMessageResponse res =
-                                            await updateUserPassword(
+                                            await widget.callbackUpdate(
                                           _actualPass.text,
                                           _newPass.text,
                                           _confirmPass.text,
@@ -129,16 +124,4 @@ class _UpdatePasswordState extends State<UpdatePassword>
                           ],
                         ))))));
   }
-}
-
-Future<CustomMessageResponse> updateUserPassword(
-    String actualPass, String newPass, String confirmPass) async {
-  LoadingHelper.show();
-  CustomMessageResponse message =
-      await UpdatePasswordService.updateUserPassword(
-          actualPass, newPass, confirmPass);
-  LoadingHelper.hide();
-
-  if (!message.success) await ToastHelper.showError(message.message);
-  return message;
 }
